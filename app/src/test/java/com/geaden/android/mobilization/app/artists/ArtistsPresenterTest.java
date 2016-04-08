@@ -25,7 +25,8 @@ public class ArtistsPresenterTest {
     @Mock
     private ArtistsRepository mArtistsRepository;
 
-    private static List<Artist> ARTISTS = Lists.newArrayList(new Artist(1L), new Artist(2L));
+    private static List<Artist> ARTISTS = Lists.newArrayList(new Artist(1L, "foo", "bar"),
+            new Artist(2L, "fuz", "buz"));
 
     /**
      * {@link ArgumentCaptor} to capture data passed to callback.
@@ -66,7 +67,7 @@ public class ArtistsPresenterTest {
     @Test
     public void clickOnArtist_ShowsDetailUi() {
         // Stubbed artist
-        Artist artist = new Artist(1L);
+        Artist artist = new Artist(1L, "foo", "bar");
 
         // Request opening artist's detail
         mArtistsPresenter.openArtistDetails(artist);

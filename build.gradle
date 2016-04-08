@@ -31,7 +31,7 @@ ext {
     buildToolsVersion = '24.0.0-alpha5'
 
     // App dependencies
-    supportLibraryVersion = '23.2.1'
+    supportLibraryVersion = '23.3.0'
     butterknifeVersion = '7.0.1'
     guavaVersion = '18.0'
     glideVersion = '3.6.1'

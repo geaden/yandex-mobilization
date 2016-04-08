@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="nav_header_height">192dp</dimen>
+    <dimen name="nav_header_text_padding">16dp</dimen>
+    <dimen name="artists_activity_vertical_margin">4dp</dimen>
+    <dimen name="artists_activity_horizontal_margin">4dp</dimen>
+    <dimen name="list_card_text_padding">8dp</dimen>
+    <dimen name="list_card_text_padding_bottom">8dp</dimen>
+    <dimen name="cardview_margin">4dp</dimen>
+    <dimen name="list_card_thumb_height">100dp</dimen>
+    <dimen name="app_bar_elevation">4dp</dimen>
+    <dimen name="fab_margin">4dp</dimen>
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="fab_elevation">2dp</dimen>
+</resources>

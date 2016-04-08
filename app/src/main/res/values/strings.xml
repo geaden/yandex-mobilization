@@ -1,3 +1,18 @@
-<resources>
-    <string name="app_name">YandexMobilization</string>
+<resources xmlns:xliff="http://schemas.android.com/tools">
+    <string name="app_name">Yandex.Mobilization</string>
+
+    <!-- Drawer related -->
+    <string name="open_drawer">Open drawer</string>
+    <string name="close_drawer">Close drawer</string>
+
+    <string name="navigation_view_header_title">Yandex.Mobilization</string>
+
+    <string name="about_title">About</string>
+
+    <!-- Artist -->
+    <string name="albums_tracks">
+        <xliff:g name="albums">%1$d</xliff:g> albums, <xliff:g name="tracks">%2$d</xliff:g> tracks
+    </string>
+    <string name="empty">No artists found :(</string>
+    <string name="action_share">Share artist</string>
 </resources>

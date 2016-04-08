@@ -1,0 +1,12 @@
+<android.support.design.widget.FloatingActionButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/artist_link"
+    android:layout_width="@dimen/fab_size"
+    android:layout_height="@dimen/fab_size"
+    android:layout_margin="@dimen/fab_margin"
+    android:contentDescription="@string/action_share"
+    android:elevation="@dimen/fab_elevation"
+    android:src="@drawable/ic_globe"
+    app:fabSize="normal"
+    app:layout_anchor="@id/artist_content"
+    app:layout_anchorGravity="bottom|right|end" />

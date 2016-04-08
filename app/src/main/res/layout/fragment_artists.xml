@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <android.support.v4.widget.SwipeRefreshLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".artists.ArtistsActivity">
+
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent">
 
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/artists_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/artists_activity_vertical_margin"
+            android:paddingLeft="@dimen/artists_activity_horizontal_margin"
+            android:paddingRight="@dimen/artists_activity_horizontal_margin"
+            android:paddingTop="@dimen/artists_activity_vertical_margin"
+            tools:listitem="@layout/item_artist" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+    <!-- Empty text view -->
+    <TextView
+        android:id="@+id/empty"
+        style="@style/TextAppearance.AppCompat.Headline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/empty" />
+</RelativeLayout>
