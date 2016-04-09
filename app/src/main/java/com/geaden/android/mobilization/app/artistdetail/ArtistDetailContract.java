@@ -3,8 +3,6 @@ package com.geaden.android.mobilization.app.artistdetail;
 import android.app.Activity;
 import android.support.v4.app.ShareCompat;
 
-import java.util.List;
-
 /**
  * Specifies contract between the view and the presenter.
  *
@@ -53,7 +51,7 @@ public interface ArtistDetailContract {
          *
          * @param genres available genres.
          */
-        void showGenres(List<String> genres);
+        void showGenres(String[] genres);
 
         /**
          * Shows number of tracks published by the artist.

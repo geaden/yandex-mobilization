@@ -3,6 +3,10 @@
     <color name="colorPrimary">#607D8B</color>
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorAccent">#FFEE58</color>
+
     <color name="list_card_text_body">#c0c0c0</color>
+
     <color name="cover_placeholder">#c0c0c0</color>
+
+    <color name="overlay_bg_color">#CC000000</color>
 </resources>

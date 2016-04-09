@@ -1,30 +1,27 @@
 package com.geaden.android.mobilization.app.data;
 
-import java.util.List;
-
 /**
  * Immutable Artist model.
  *
  * @author Gennady Denisov
  */
 public final class Artist {
-    private final long mId;
+    private final Long mId;
     private String mName;
     private String mDescription;
-    private int mTracks;
-    private int mAlbums;
+    private Integer mTracks;
+    private Integer mAlbums;
     private String mLink;
-    private List<String> mGenres;
+    private String[] mGenres;
     private Cover mCover;
 
-
-    public Artist(long id, String name, String description) {
+    public Artist(Long id, String name, String description) {
         mId = id;
         mName = name;
         mDescription = description;
     }
 
-    public long getId() {
+    public Long getId() {
         return mId;
     }
 
@@ -44,7 +41,7 @@ public final class Artist {
         return mAlbums;
     }
 
-    public List<String> getGenres() {
+    public String[] getGenres() {
         return mGenres;
     }
 
@@ -68,11 +65,19 @@ public final class Artist {
         mAlbums = albums;
     }
 
-    public void setGenres(List<String> genres) {
+    public void setGenres(String[] genres) {
         mGenres = genres;
     }
 
     public void setCover(Cover cover) {
         mCover = cover;
+    }
+
+    @Override
+    public String toString() {
+        return "Artist{" + mId +
+                ", " + mName +
+                ", " + mDescription +
+                "}";
     }
 }

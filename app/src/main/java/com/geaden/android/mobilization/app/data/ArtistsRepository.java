@@ -38,6 +38,11 @@ public interface ArtistsRepository {
     void getArtist(@NonNull long artistId, @NonNull GetArtistCallback callback);
 
     /**
+     * Refreshes data.
+     */
+    void refreshData();
+
+    /**
      * Callback to handle get note method.
      */
     interface GetArtistCallback {

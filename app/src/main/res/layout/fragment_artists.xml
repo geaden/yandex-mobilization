@@ -21,10 +21,11 @@
             android:paddingTop="@dimen/artists_activity_vertical_margin"
             tools:listitem="@layout/item_artist" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
     <!-- Empty text view -->
     <TextView
         android:id="@+id/empty"
-        style="@style/TextAppearance.AppCompat.Headline"
+        style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"

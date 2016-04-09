@@ -53,7 +53,7 @@ public class ArtistsActivity extends AppCompatActivity {
         // Set up the navigation drawer.
         setUpDrawerContent();
 
-        if (null != savedInstanceState) {
+        if (null == savedInstanceState) {
             initFragment(ArtistsFragment.newInstance());
         }
 
@@ -63,7 +63,6 @@ public class ArtistsActivity extends AppCompatActivity {
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer,
                 R.string.close_drawer);
-
 
     }
 

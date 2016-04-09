@@ -3,6 +3,7 @@ package com.geaden.android.mobilization.app.artists;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.geaden.android.mobilization.app.ArtistsApplication;
 import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.artistdetail.ArtistDetailActivity;
 import com.geaden.android.mobilization.app.data.Artist;
@@ -27,6 +29,8 @@ import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,7 +44,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ArtistsFragment extends Fragment implements ArtistsContract.View {
 
-    private ArtistsRepository artistsRepository;
+    @Inject
+    ArtistsRepository artistsRepository;
+
     private ArtistsPresenter mActionsListener;
 
     @Bind(R.id.refresh_layout)
@@ -66,6 +72,8 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Assign singleton instances to repository field annotated with Inject.
+        ((ArtistsApplication) getActivity().getApplication()).getRepositoryComponent().inject(this);
         mArtistsAdapter = new ArtistsAdapter(getActivity(), new ArrayList<Artist>(0), mItemListener);
     }
 
@@ -80,9 +88,7 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setRetainInstance(true);
-
         mActionsListener = new ArtistsPresenter(artistsRepository, this);
     }
 
@@ -91,6 +97,7 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_artists, container, false);
         ButterKnife.bind(this, root);
+
         mRecyclerView.setAdapter(mArtistsAdapter);
 
         int numColumns = getContext().getResources().getInteger(R.integer.num_artists_columns);
@@ -98,18 +105,7 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
 
-        // Control empty view, in case we get empty result.
-        mArtistsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                if (mArtistsAdapter.getItemCount() > 0) {
-                    mEmptyView.setVisibility(View.GONE);
-                } else {
-                    mEmptyView.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        mArtistsAdapter.setEmptyView(mEmptyView);
 
         // Pull-to-refresh
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -145,7 +141,6 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     @Override
     public void showArtists(List<Artist> artists) {
         mArtistsAdapter.replaceData(artists);
-
     }
 
     @Override
@@ -165,6 +160,7 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
         private Context mContext;
         private List<Artist> mArtists;
         private ArtistItemListener mItemListener;
+        private View mEmptyView;
 
         public ArtistsAdapter(Context context, List<Artist> artists, ArtistItemListener itemListener) {
             setList(artists);
@@ -218,11 +214,25 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
         }
 
         /**
-         * Replaces data and notifies data set change. Alternative to CursorAdapter#swapData.
+         * Alternative method to set empty view.
+         *
+         * @param emptyView view representing empty state.
+         */
+        public void setEmptyView(View emptyView) {
+            mEmptyView = emptyView;
+        }
+
+        /**
+         * Replaces data and notifies about data set change. Alternative to CursorAdapter#swapData.
          *
          * @param artists list or artists to replace.
          */
-        public void replaceData(List<Artist> artists) {
+        public void replaceData(@NonNull List<Artist> artists) {
+            if (artists.size() == 0) {
+                mEmptyView.setVisibility(View.VISIBLE);
+            } else {
+                mEmptyView.setVisibility(View.GONE);
+            }
             setList(artists);
             notifyDataSetChanged();
         }
@@ -247,6 +257,7 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
 
             public ViewHolder(View itemView, ArtistItemListener listener) {
                 super(itemView);
+                ButterKnife.bind(this, itemView);
                 mItemListener = listener;
                 itemView.setOnClickListener(this);
             }

@@ -8,8 +8,6 @@ import android.support.v4.app.ShareCompat;
 import com.geaden.android.mobilization.app.data.Artist;
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
 
-import java.util.List;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -64,8 +62,7 @@ public class ArtistDetailPresenter implements ArtistDetailContract.UserActionsLi
         String coverImageUrl = artist.getCover().getBig();
         int tracks = artist.getTracks();
         int albums = artist.getAlbums();
-        List<String> genres = artist.getGenres();
-
+        String[] genres = artist.getGenres();
         mArtistDetailView.showName(name);
         mArtistDetailView.showDescription(description);
         mArtistDetailView.showGenres(genres);

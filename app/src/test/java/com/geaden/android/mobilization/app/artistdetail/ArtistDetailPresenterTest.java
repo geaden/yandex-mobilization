@@ -6,7 +6,6 @@ import android.support.v4.app.ShareCompat;
 import com.geaden.android.mobilization.app.data.Artist;
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
 import com.geaden.android.mobilization.app.data.Cover;
-import com.google.common.collect.Lists;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +17,6 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.List;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -39,7 +36,7 @@ public class ArtistDetailPresenterTest {
     private static final String SMALL_LINK = "small";
     private static final String BIG_LINK = "big";
     private static final String TEST_LINK = "test_link";
-    private static final List<String> TEST_GENRES = Lists.newArrayList("foo", "bar");
+    private static final String[] TEST_GENRES = {"foo", "bar"};
     private static final int TEST_ALBUMS = 10;
     private static final int TEST_TRACKS = 10;
     private static final long INVALID_ID = -1L;

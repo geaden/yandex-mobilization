@@ -16,8 +16,6 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
 
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -113,7 +111,7 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
     }
 
     @Override
-    public void showGenres(List<String> genres) {
+    public void showGenres(String[] genres) {
         // TODO: Implement this
 
     }

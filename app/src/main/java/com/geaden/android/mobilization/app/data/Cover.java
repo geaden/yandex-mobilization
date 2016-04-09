@@ -17,6 +17,14 @@ public final class Cover {
         this.mBig = big;
     }
 
+    public void setSmall(String small) {
+        mSmall = small;
+    }
+
+    public void setBig(String big) {
+        mBig = big;
+    }
+
     public String getSmall() {
         return mSmall;
     }
