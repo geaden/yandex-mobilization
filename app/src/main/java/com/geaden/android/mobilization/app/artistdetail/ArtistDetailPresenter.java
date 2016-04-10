@@ -2,8 +2,8 @@ package com.geaden.android.mobilization.app.artistdetail;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ShareCompat;
 
 import com.geaden.android.mobilization.app.data.Artist;
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
@@ -37,18 +37,15 @@ public class ArtistDetailPresenter implements ArtistDetailContract.UserActionsLi
                 } else {
                     showArtist(artist);
                 }
-
             }
         });
     }
 
     @Override
     public void openArtistLink(Activity activity, String artistLink) {
-        Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
-                .setType("text/plain")
-                .setText(artistLink)
-                .getIntent();
-        activity.startActivity(shareIntent);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(artistLink));
+        activity.startActivity(intent);
     }
 
     /**
@@ -60,14 +57,15 @@ public class ArtistDetailPresenter implements ArtistDetailContract.UserActionsLi
         String name = artist.getName();
         String description = artist.getDescription();
         String coverImageUrl = artist.getCover().getBig();
+        String artistLink = artist.getLink();
         int tracks = artist.getTracks();
         int albums = artist.getAlbums();
         String[] genres = artist.getGenres();
         mArtistDetailView.showName(name);
         mArtistDetailView.showDescription(description);
         mArtistDetailView.showGenres(genres);
-        mArtistDetailView.showTracks(tracks);
-        mArtistDetailView.showAlbums(albums);
+        mArtistDetailView.showAlbumsAndTracks(albums, tracks);
         mArtistDetailView.showCover(coverImageUrl);
+        mArtistDetailView.showOpenArtistLinkFab(artistLink);
     }
 }

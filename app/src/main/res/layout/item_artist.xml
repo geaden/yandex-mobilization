@@ -3,10 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/artist_list_card_size"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/artist_list_card_margin"
-    android:layout_marginLeft="@dimen/artist_list_card_margin"
-    android:layout_marginRight="@dimen/artist_list_card_margin"
-    android:layout_marginTop="@dimen/artist_list_card_margin"
+    android:layout_margin="@dimen/artist_list_card_margin"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
@@ -29,6 +26,7 @@
                 android:layout_height="@dimen/artist_list_card_size"
                 android:background="@color/cover_placeholder"
                 android:scaleType="centerCrop"
+                android:transitionName="@string/transition_cover"
                 tools:src="@drawable/lenna" />
 
             <TextView
@@ -37,6 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
+                android:background="@drawable/overlay_bg"
                 android:ellipsize="end"
                 android:maxLines="4"
                 android:paddingBottom="@dimen/artist_list_card_text_padding_bottom"
@@ -44,7 +43,6 @@
                 android:paddingRight="@dimen/artist_list_card_text_padding"
                 android:paddingTop="@dimen/artist_list_card_text_padding"
                 android:textColor="@android:color/white"
-                android:background="@drawable/overlay_bg"
                 tools:text="Lenna" />
 
         </FrameLayout>

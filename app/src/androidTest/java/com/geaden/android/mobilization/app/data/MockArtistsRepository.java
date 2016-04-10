@@ -2,7 +2,6 @@ package com.geaden.android.mobilization.app.data;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.test.espresso.core.deps.guava.collect.Lists;
 import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.util.ArrayMap;
 
@@ -20,8 +19,10 @@ public class MockArtistsRepository implements ArtistsRepository {
     private static final ArrayMap<Long, Artist> ARTISTS_DATA;
     private static final long SERVICE_LATENCY_IN_MILLIS = 2000;
 
-    private static final String SMALL = "http://avatars.yandex.net/get-music-content/c8c90c0e.p.63101/300x300";
-    private static final String BIG = "http://avatars.yandex.net/get-music-content/c8c90c0e.p.63101/1000x1000";
+    private static final String SMALL = "file:///android_asset/lenna.png";
+    private static final String BIG = "file:///android_asset/lenna.png";
+
+    private static final String[] TEST_GENRES = {"pop", "jazz", "funk"};
 
     private static final AtomicLong atomicId = new AtomicLong(1L);
 
@@ -29,7 +30,7 @@ public class MockArtistsRepository implements ArtistsRepository {
     private final CountingIdlingResource mCountingIdlingResource;
 
     public MockArtistsRepository(CountingIdlingResource countingIdlingResource) {
-        this.mCountingIdlingResource = countingIdlingResource;
+        mCountingIdlingResource = countingIdlingResource;
     }
 
     static {
@@ -57,7 +58,7 @@ public class MockArtistsRepository implements ArtistsRepository {
 
     private static void addArtist(String name, String description) {
         Artist newArtist = new Artist(atomicId.getAndDecrement(), name, description);
-        newArtist.setGenres(Lists.newArrayList("pop", "jazz", "funk"));
+        newArtist.setGenres(TEST_GENRES);
         newArtist.setTracks(5);
         newArtist.setAlbums(5);
         newArtist.setLink("https://ya.ru");

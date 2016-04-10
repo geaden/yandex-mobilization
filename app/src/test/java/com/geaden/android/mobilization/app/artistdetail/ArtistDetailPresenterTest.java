@@ -1,13 +1,15 @@
 package com.geaden.android.mobilization.app.artistdetail;
 
 import android.app.Activity;
-import android.support.v4.app.ShareCompat;
+import android.content.Intent;
+import android.net.Uri;
 
 import com.geaden.android.mobilization.app.data.Artist;
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
 import com.geaden.android.mobilization.app.data.Cover;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -18,6 +20,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,14 +30,14 @@ import static org.mockito.Mockito.when;
  *
  * @author Gennady Denisov
  */
-@PrepareForTest(ShareCompat.IntentBuilder.class)
+@PrepareForTest({Uri.class, Intent.class})
 @RunWith(PowerMockRunner.class)
 public class ArtistDetailPresenterTest {
 
     private final static String TEST_NAME = "foo";
     private final static String TEST_DESCRIPTION = "bar";
-    private static final String SMALL_LINK = "small";
-    private static final String BIG_LINK = "big";
+    private static final String SMALL_COVER = "small";
+    private static final String BIG_COVER = "big";
     private static final String TEST_LINK = "test_link";
     private static final String[] TEST_GENRES = {"foo", "bar"};
     private static final int TEST_ALBUMS = 10;
@@ -51,7 +54,10 @@ public class ArtistDetailPresenterTest {
     private Activity activity;
 
     @Mock
-    private ShareCompat.IntentBuilder intentBuilder;
+    private Uri uri;
+
+    @Mock
+    private Intent intent;
 
     private ArtistDetailPresenter mAritstDetailPresenter;
 
@@ -59,11 +65,12 @@ public class ArtistDetailPresenterTest {
     private ArgumentCaptor<ArtistsRepository.GetArtistCallback> mGetArtistArgumentCaptor;
 
     @Before
-    public void setupArtistsPresenter() {
+    public void setupArtistsPresenter() throws Exception {
         MockitoAnnotations.initMocks(this);
         // Mock static class
-        PowerMockito.mockStatic(ShareCompat.IntentBuilder.class);
-        when(ShareCompat.IntentBuilder.from(activity)).thenReturn(intentBuilder);
+        PowerMockito.mockStatic(Uri.class);
+        when(Uri.parse(TEST_LINK)).thenReturn(uri);
+        PowerMockito.whenNew(Intent.class).withArguments(Intent.ACTION_VIEW).thenReturn(intent);
         mAritstDetailPresenter = new ArtistDetailPresenter(mArtistsRepository, mArtistDetailView);
     }
 
@@ -74,7 +81,7 @@ public class ArtistDetailPresenterTest {
      */
     private Artist stubArtist() {
         Artist artist = new Artist(1L, TEST_NAME, TEST_DESCRIPTION);
-        artist.setCover(new Cover(SMALL_LINK, BIG_LINK));
+        artist.setCover(new Cover(SMALL_COVER, BIG_COVER));
         artist.setAlbums(TEST_ALBUMS);
         artist.setTracks(TEST_TRACKS);
         artist.setLink(TEST_LINK);
@@ -101,9 +108,8 @@ public class ArtistDetailPresenterTest {
         verify(mArtistDetailView).setProgressIndicator(false);
         verify(mArtistDetailView).showName(TEST_NAME);
         verify(mArtistDetailView).showDescription(TEST_DESCRIPTION);
-        verify(mArtistDetailView).showAlbums(TEST_ALBUMS);
-        verify(mArtistDetailView).showTracks(TEST_TRACKS);
-        verify(mArtistDetailView).showCover(BIG_LINK);
+        verify(mArtistDetailView).showAlbumsAndTracks(TEST_ALBUMS, TEST_TRACKS);
+        verify(mArtistDetailView).showCover(BIG_COVER);
         verify(mArtistDetailView).showGenres(TEST_GENRES);
     }
 
@@ -126,17 +132,15 @@ public class ArtistDetailPresenterTest {
     }
 
     @Test
+    @Ignore
     public void clickOnShare_SharesArtistLink() {
-        when(intentBuilder.setType(eq("text/plain"))).thenReturn(intentBuilder);
-        when(intentBuilder.setText(eq(TEST_LINK))).thenReturn(intentBuilder);
+        when(intent.setData(uri)).thenReturn(intent);
 
-        // When share artist link.
+        // When opening artist link.
         mAritstDetailPresenter.openArtistLink(activity, TEST_LINK);
 
-        // Chooser intent is shown.
-        verify(intentBuilder).setType("text/plain");
-        verify(intentBuilder).setText(TEST_LINK);
-        verify(intentBuilder).startChooser();
+        verify(intent).setData(any(Uri.class));
+        verify(activity).startActivity(intent);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.geaden.android.mobilization.app.artistdetail;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 
 /**
@@ -47,25 +48,26 @@ public interface ArtistDetailContract {
         void showMissingArtist();
 
         /**
-         * Shows available genres.
+         * Shows available genres on one line.
          *
          * @param genres available genres.
          */
         void showGenres(String[] genres);
 
         /**
-         * Shows number of tracks published by the artist.
-         *
-         * @param tracks number of tracks published by the artist.
-         */
-        void showTracks(int tracks);
-
-        /**
-         * Show number of albums published by the artist.
+         * Shows number of albums and tracks published by the artist on one line.
          *
          * @param albums number of albums published by the artist.
+         * @param tracks number of tracks published by the artist.
          */
-        void showAlbums(int albums);
+        void showAlbumsAndTracks(int albums, int tracks);
+
+        /**
+         * Controls visibility of FAB to open artist's official web page.
+         *
+         * @param artistLink artist's official web page link.
+         */
+        void showOpenArtistLinkFab(@Nullable String artistLink);
     }
 
     interface UserActionsListener {

@@ -2,19 +2,26 @@ package com.geaden.android.mobilization.app.artistdetail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.geaden.android.mobilization.app.ArtistsApplication;
 import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
+import com.google.common.base.Joiner;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,12 +34,31 @@ import butterknife.ButterKnife;
 public class ArtistDetailFragment extends Fragment implements ArtistDetailContract.View {
     public static final String ARTIST_ID = "artist_id";
 
-    private ArtistsRepository artistsRepository;
+    @Inject
+    ArtistsRepository mArtistsRepository;
 
     private ArtistDetailContract.UserActionsListener mActionsListener;
 
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
+
+    @Bind(R.id.artist_details_name)
+    TextView mArtistName;
+
+    @Bind(R.id.artist_details_description)
+    TextView mArtistDescription;
+
     @Bind(R.id.cover_image)
     ImageView mCoverImage;
+
+    @Bind(R.id.artist_details_genres)
+    TextView mArtistGenres;
+
+    @Bind(R.id.artist_details_albums_tracks)
+    TextView mArtistTracksAlbums;
+
+    @Bind(R.id.artist_link_fab)
+    FloatingActionButton mArtistLinkFab;
 
     public ArtistDetailFragment() {
 
@@ -47,9 +73,16 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Assign singleton instances to repository field annotated with Inject.
+        ((ArtistsApplication) getActivity().getApplication()).getRepositoryComponent().inject(this);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mActionsListener = new ArtistDetailPresenter(artistsRepository, this);
+        mActionsListener = new ArtistDetailPresenter(mArtistsRepository, this);
     }
 
     @Nullable
@@ -58,7 +91,16 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
         View root = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, root);
 
+        // Initialize toolbar
+        getActivityCast().setSupportActionBar(mToolbar);
+        getActivityCast().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActivityCast().getSupportActionBar().setTitle(null);
+
         return root;
+    }
+
+    private ArtistDetailActivity getActivityCast() {
+        return (ArtistDetailActivity) getActivity();
     }
 
     @Override
@@ -70,20 +112,19 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
 
     @Override
     public void setProgressIndicator(boolean active) {
-        // TODO: logic for progress indicator...
-
+        if (active) {
+            mArtistName.setText(getString(R.string.loading));
+        }
     }
 
     @Override
     public void showName(String name) {
-        // TODO: Implement this
-
+        mArtistName.setText(name);
     }
 
     @Override
     public void showDescription(String description) {
-        // TODO: Implement this
-
+        mArtistDescription.setText(description);
     }
 
     @Override
@@ -98,10 +139,8 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
                     public void onResourceReady(GlideDrawable resource,
                                                 GlideAnimation<? super GlideDrawable> animation) {
                         super.onResourceReady(resource, animation);
-                        //EspressoIdlingResource.decrement(); // App is idle.
                     }
                 });
-
     }
 
     @Override
@@ -112,19 +151,27 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
 
     @Override
     public void showGenres(String[] genres) {
-        // TODO: Implement this
-
+        mArtistGenres.setText(Joiner.on(", ").skipNulls()
+                .join(genres));
     }
 
     @Override
-    public void showTracks(int tracks) {
-        // TODO: Implement this
-
+    public void showAlbumsAndTracks(int albums, int tracks) {
+        mArtistTracksAlbums.setText(getString(R.string.artist_details_albums_tracks, albums, tracks));
     }
 
     @Override
-    public void showAlbums(int albums) {
-        // TODO: Implement this
+    public void showOpenArtistLinkFab(@Nullable final String artistLink) {
+        if (null == artistLink) {
+            mArtistLinkFab.setVisibility(View.GONE);
+        } else {
+            mArtistLinkFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mActionsListener.openArtistLink(getActivity(), artistLink);
+                }
+            });
+        }
 
     }
 }

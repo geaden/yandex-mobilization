@@ -15,8 +15,17 @@
 
     <dimen name="app_bar_elevation">4dp</dimen>
 
-    <!-- Artist detail related -->
+    <!-- Fab related -->
     <dimen name="fab_margin">4dp</dimen>
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_elevation">2dp</dimen>
+
+    <!-- Artist detail related -->
+    <dimen name="artist_description_padding_end">32dp</dimen>
+    <dimen name="artist_description_margin">16dp</dimen>
+    <dimen name="albums_tracks_grid_padding">8dp</dimen>
+    <dimen name="artist_detail_name_text_size">32sp</dimen>
+    <dimen name="artist_detail_name_padding_bottom">16dp</dimen>
+    <dimen name="artist_detail_name_padding_left">72dp</dimen>
+    <dimen name="artist_detail_cover_height">300dp</dimen>
 </resources>

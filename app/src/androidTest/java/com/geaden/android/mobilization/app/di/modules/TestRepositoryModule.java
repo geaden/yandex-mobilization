@@ -18,6 +18,7 @@ import dagger.Provides;
 @Module
 public class TestRepositoryModule {
 
+    // Idling resource to tell Espresso that some background task is running
     private final CountingIdlingResource mCountingIdlingResource;
 
     public TestRepositoryModule(CountingIdlingResource countingIdlingResource) {

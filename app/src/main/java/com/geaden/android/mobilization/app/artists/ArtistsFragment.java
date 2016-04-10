@@ -45,7 +45,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ArtistsFragment extends Fragment implements ArtistsContract.View {
 
     @Inject
-    ArtistsRepository artistsRepository;
+    ArtistsRepository mArtistsRepository;
 
     private ArtistsPresenter mActionsListener;
 
@@ -89,7 +89,7 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
-        mActionsListener = new ArtistsPresenter(artistsRepository, this);
+        mActionsListener = new ArtistsPresenter(mArtistsRepository, this);
     }
 
     @Nullable
