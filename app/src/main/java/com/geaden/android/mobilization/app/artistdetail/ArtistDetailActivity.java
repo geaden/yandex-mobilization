@@ -1,10 +1,18 @@
 package com.geaden.android.mobilization.app.artistdetail;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.geaden.android.mobilization.app.R;
 
@@ -15,6 +23,38 @@ import com.geaden.android.mobilization.app.R;
  */
 public class ArtistDetailActivity extends AppCompatActivity {
     public static final String EXTRA_ARTIST_ID = "artist_id";
+
+    /**
+     * Helper method to the activity.
+     *
+     * @param activity  the activity to be launched.
+     * @param artistId  requested artist id.
+     * @param coverView artist's cover image.
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void launch(Activity activity, long artistId, View coverView) {
+        Intent intent = getLaunchIntent(activity, artistId);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity, coverView, coverView.getTransitionName());
+            ActivityCompat.startActivity(activity, intent, options.toBundle());
+        } else {
+            activity.startActivity(intent);
+        }
+    }
+
+    /**
+     * Helper method to get launching intent.
+     *
+     * @param context  the Context to instantiate Intent with.
+     * @param artistId request artist id to open activity for.
+     * @return intent to be launched.
+     */
+    public static Intent getLaunchIntent(Context context, long artistId) {
+        Intent intent = new Intent(context, ArtistDetailActivity.class);
+        intent.putExtra(EXTRA_ARTIST_ID, artistId);
+        return intent;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

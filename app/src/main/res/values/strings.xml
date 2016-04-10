@@ -1,5 +1,5 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
-    <string name="app_name">Yandex.Mobilization</string>
+    <string name="app_name">Mobilization</string>
 
     <!-- Drawer related -->
     <string name="open_drawer">Open drawer</string>
@@ -18,4 +18,5 @@
     <!-- Artist details -->
     <string name="artist_details_albums_tracks"><xliff:g name="albums">%1$d</xliff:g> albums • <xliff:g name="tracks">%2$d</xliff:g> tracks</string>
     <string name="transition_cover">transition_cover</string>
+    <string name="missing_artist">Artist not found :(</string>
 </resources>

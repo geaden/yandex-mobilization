@@ -31,9 +31,10 @@ public interface ArtistsContract {
         /**
          * Shows artist's details.
          *
-         * @param artistId artist Id to load data for.
+         * @param artistId  artist Id to load data for.
+         * @param coverView artist's cover.
          */
-        void showArtistDetailUi(long artistId);
+        void showArtistDetailUi(long artistId, android.view.View coverView);
     }
 
     /**
@@ -51,7 +52,8 @@ public interface ArtistsContract {
          * Opens artists details.
          *
          * @param requestedArtist instance of {@link Artist} to open details for.
+         * @param coverView       artist's cover.
          */
-        void openArtistDetails(@NonNull Artist requestedArtist);
+        void openArtistDetails(@NonNull Artist requestedArtist, @NonNull android.view.View coverView);
     }
 }

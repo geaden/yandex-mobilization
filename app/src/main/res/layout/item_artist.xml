@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
-                android:background="@drawable/overlay_bg"
+                android:background="@drawable/overlay_bg_bottom_up"
                 android:ellipsize="end"
                 android:maxLines="4"
                 android:paddingBottom="@dimen/artist_list_card_text_padding_bottom"

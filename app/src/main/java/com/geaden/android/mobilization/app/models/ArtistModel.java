@@ -10,6 +10,8 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.util.Date;
+
 /**
  * Represents artist database model.
  *
@@ -45,6 +47,9 @@ public class ArtistModel extends BaseModel {
     @Column
     String link;
 
+    @Column(name="created_at")
+    Date createAt;
+
     public void setId(long id) {
         this.id = id;
     }
@@ -79,6 +84,10 @@ public class ArtistModel extends BaseModel {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
     }
 
     /**

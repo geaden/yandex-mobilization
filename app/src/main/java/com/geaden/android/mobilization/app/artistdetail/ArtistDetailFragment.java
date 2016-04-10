@@ -2,6 +2,8 @@ package com.geaden.android.mobilization.app.artistdetail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -56,10 +58,25 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
     TextView mArtistGenres;
 
     @Bind(R.id.artist_details_albums_tracks)
-    TextView mArtistTracksAlbums;
+    TextView mArtistAlbumsTrack;
 
     @Bind(R.id.artist_link_fab)
     FloatingActionButton mArtistLinkFab;
+
+    @Bind(R.id.artist_detail_genres_icon)
+    ImageView mArtistGenresIcon;
+
+    @Bind(R.id.artist_details_albums_tracks_icon)
+    ImageView mArtistAlbumsTracksIcon;
+
+    @Bind(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout mCollapstinToolbar;
+
+    @Bind(R.id.appbar)
+    AppBarLayout mAppBar;
+
+    // Name of the artist.
+    private String mName;
 
     public ArtistDetailFragment() {
 
@@ -97,6 +114,27 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
         getActivityCast().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getActivityCast().getSupportActionBar().setTitle(null);
 
+        mAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShown = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    mCollapstinToolbar.setTitle(mName);
+                    hideName();
+                    isShown = true;
+                } else if (isShown) {
+                    mCollapstinToolbar.setTitle(null);
+                    showName(mName);
+                    isShown = false;
+                }
+            }
+        });
+
         return root;
     }
 
@@ -114,12 +152,13 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
     @Override
     public void setProgressIndicator(boolean active) {
         if (active) {
-            mArtistName.setText(getString(R.string.loading));
+            showName(getString(R.string.loading));
         }
     }
 
     @Override
     public void showName(String name) {
+        mName = name;
         mArtistName.setText(name);
     }
 
@@ -130,7 +169,6 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
 
     @Override
     public void showCover(String coverLink) {
-        // This app uses Glide for image loading
         Glide.with(this)
                 .load(coverLink)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -145,9 +183,22 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
     }
 
     @Override
-    public void showMissingArtist() {
-        // TODO: Implement this
+    public void showCover(Integer resourceId) {
+        Glide.with(this)
+                .load(resourceId)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .into(mCoverImage);
+    }
 
+    @Override
+    public void showMissingArtist() {
+        hideName();
+        hideGenres();
+        hideAlbumsAndTracks();
+        hideOpenArtistLinkFab();
+        showCover(R.drawable.nav_header_background);
+        showDescription(getString(R.string.missing_artist));
     }
 
     @Override
@@ -158,20 +209,38 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
 
     @Override
     public void showAlbumsAndTracks(int albums, int tracks) {
-        mArtistTracksAlbums.setText(getString(R.string.artist_details_albums_tracks, albums, tracks));
+        mArtistAlbumsTrack.setText(getString(R.string.artist_details_albums_tracks, albums, tracks));
     }
 
     @Override
     public void showOpenArtistLinkFab(@Nullable final String artistLink) {
-        if (null == artistLink) {
-            mArtistLinkFab.setVisibility(View.GONE);
-        } else {
-            mArtistLinkFab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mActionsListener.openArtistLink(getActivity(), artistLink);
-                }
-            });
-        }
+        mArtistLinkFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionsListener.openArtistLink(getActivity(), artistLink);
+            }
+        });
+    }
+
+    @Override
+    public void hideOpenArtistLinkFab() {
+        mArtistLinkFab.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideName() {
+        mArtistName.setText("");
+    }
+
+    @Override
+    public void hideGenres() {
+        mArtistGenresIcon.setVisibility(View.GONE);
+        mArtistGenres.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideAlbumsAndTracks() {
+        mArtistAlbumsTracksIcon.setVisibility(View.GONE);
+        mArtistAlbumsTrack.setVisibility(View.GONE);
     }
 }

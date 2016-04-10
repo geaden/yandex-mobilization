@@ -66,6 +66,10 @@ public class ArtistDetailPresenter implements ArtistDetailContract.UserActionsLi
         mArtistDetailView.showGenres(genres);
         mArtistDetailView.showAlbumsAndTracks(albums, tracks);
         mArtistDetailView.showCover(coverImageUrl);
-        mArtistDetailView.showOpenArtistLinkFab(artistLink);
+        if (null != artistLink) {
+            mArtistDetailView.showOpenArtistLinkFab(artistLink);
+        } else {
+            mArtistDetailView.hideOpenArtistLinkFab();
+        }
     }
 }

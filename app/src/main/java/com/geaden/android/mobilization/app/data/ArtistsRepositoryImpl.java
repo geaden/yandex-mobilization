@@ -35,7 +35,8 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
         // Initialize list of artists.
         final List<Artist> artists = new ArrayList<>(0);
 
-        SQLite.select().from(ArtistModel.class).async().queryList(
+        SQLite.select().from(ArtistModel.class).orderBy(ArtistModel_Table.created_at, true)
+                .async().queryList(
                 new TransactionListenerAdapter<List<ArtistModel>>() {
                     @Override
                     public void onResultReceived(List<ArtistModel> models) {
@@ -69,7 +70,11 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
                 .querySingle(new TransactionListenerAdapter<ArtistModel>() {
                     @Override
                     public void onResultReceived(ArtistModel artistModel) {
-                        callback.onArtistLoaded(artistModel.toArtist());
+                        if (null != artistModel) {
+                            callback.onArtistLoaded(artistModel.toArtist());
+                        } else {
+                            callback.onArtistLoaded(null);
+                        }
                     }
                 });
     }

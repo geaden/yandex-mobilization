@@ -43,8 +43,8 @@ public class ArtistsPresenter implements ArtistsContract.UserActionsListener {
     }
 
     @Override
-    public void openArtistDetails(@NonNull Artist requestedArtist) {
+    public void openArtistDetails(@NonNull Artist requestedArtist, @NonNull android.view.View coverView) {
         checkNotNull(requestedArtist, "requested artist cannot be null");
-        mArtistsView.showArtistDetailUi(requestedArtist.getId());
+        mArtistsView.showArtistDetailUi(requestedArtist.getId(), coverView);
     }
 }

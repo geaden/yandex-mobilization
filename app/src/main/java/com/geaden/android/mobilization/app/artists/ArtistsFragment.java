@@ -1,7 +1,6 @@
 package com.geaden.android.mobilization.app.artists;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -80,8 +79,8 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     // Open artist details on click.
     ArtistItemListener mItemListener = new ArtistItemListener() {
         @Override
-        public void onArtistClick(Artist clickedArtist) {
-            mActionsListener.openArtistDetails(clickedArtist);
+        public void onArtistClick(Artist clickedArtist, View coverView) {
+            mActionsListener.openArtistDetails(clickedArtist, coverView);
         }
     };
 
@@ -144,12 +143,9 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     }
 
     @Override
-    public void showArtistDetailUi(long artistId) {
-        // in it's own Activity, since it makes more sense that way and it gives us the flexibility
-        // to show some Intent stubbing.
-        Intent intent = new Intent(getContext(), ArtistDetailActivity.class);
-        intent.putExtra(ArtistDetailActivity.EXTRA_ARTIST_ID, artistId);
-        startActivity(intent);
+    public void showArtistDetailUi(long artistId, View coverView) {
+        ArtistDetailActivity.launch(
+                getActivity(), artistId, coverView);
     }
 
     /**
@@ -266,7 +262,7 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
             public void onClick(View v) {
                 int position = getAdapterPosition();
                 Artist artist = getItem(position);
-                mItemListener.onArtistClick(artist);
+                mItemListener.onArtistClick(artist, coverSmall);
             }
         }
     }
@@ -275,6 +271,6 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
      * Listener for artist item clicks.
      */
     interface ArtistItemListener {
-        void onArtistClick(Artist clickedArtist);
+        void onArtistClick(Artist clickedArtist, View coverView);
     }
 }

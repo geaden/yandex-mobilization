@@ -25,6 +25,9 @@ public class ArtistsPresenterTest {
     @Mock
     private ArtistsRepository mArtistsRepository;
 
+    @Mock
+    private android.view.View mCoverView;
+
     private static List<Artist> ARTISTS = Lists.newArrayList(new Artist(1L, "foo", "bar"),
             new Artist(2L, "fuz", "buz"));
 
@@ -72,9 +75,9 @@ public class ArtistsPresenterTest {
         Artist artist = new Artist(1L, "foo", "bar");
 
         // Request opening artist's detail
-        mArtistsPresenter.openArtistDetails(artist);
+        mArtistsPresenter.openArtistDetails(artist, mCoverView);
 
         // The artists detail UI is shown
-        verify(mArtistsView).showArtistDetailUi(1L);
+        verify(mArtistsView).showArtistDetailUi(1L, mCoverView);
     }
 }

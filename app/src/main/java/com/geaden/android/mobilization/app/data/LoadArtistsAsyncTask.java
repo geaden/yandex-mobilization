@@ -16,6 +16,7 @@ import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Cache;
@@ -82,9 +83,11 @@ public class LoadArtistsAsyncTask extends AsyncTask<Context, Void, List<Artist>>
 
         try {
             Response response = mClient.newCall(request).execute();
+
             if (!response.isSuccessful()) {
                 throw new IOException("Unexpected code " + response);
             }
+
             Artist[] artistsArray = gson.fromJson(response.body().charStream(), Artist[].class);
 
             List<ArtistModel> models = new ArrayList<>();
@@ -92,11 +95,10 @@ public class LoadArtistsAsyncTask extends AsyncTask<Context, Void, List<Artist>>
             // Save retrieved artists to database synchronously
             for (Artist artist : artistsArray) {
                 ArtistModel artistModel = artist.toModel();
+                artistModel.setCreateAt(new Date());
                 models.add(artistModel);
             }
             new InsertModelTransaction<>(ProcessModelInfo.withModels(models)).onExecute();
-//            TransactionManager.getInstance()
-//                    .addTransaction(new SaveModelTransaction<>(ProcessModelInfo.withModels(models)));
             return Arrays.asList(artistsArray);
         } catch (IOException e) {
             Log.e(TAG, "Unexpected exception", e);

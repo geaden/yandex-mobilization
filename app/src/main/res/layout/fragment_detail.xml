@@ -24,9 +24,10 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleTextAppearance="@android:color/transparent"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/cover_image"
@@ -42,8 +43,10 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/overlay_bg_top_bottom"
+                android:background="@drawable/overlay_bg_top_down"
+                android:minHeight="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             <TextView
@@ -52,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="@drawable/overlay_bg"
+                android:background="@drawable/overlay_bg_bottom_up"
                 android:fontFamily="sans-serif-condensed"
                 android:lineSpacingMultiplier="0.9"
                 android:paddingBottom="@dimen/artist_detail_name_padding_bottom"
@@ -90,6 +93,7 @@
                 app:useDefaultMargins="true">
 
                 <ImageView
+                    android:id="@+id/artist_detail_genres_icon"
                     android:paddingBottom="@dimen/albums_tracks_grid_padding"
                     android:paddingEnd="@dimen/albums_tracks_grid_padding"
                     android:paddingRight="@dimen/albums_tracks_grid_padding"
@@ -104,6 +108,7 @@
                     tools:text="folk, pop, rock, jazz" />
 
                 <ImageView
+                    android:id="@+id/artist_details_albums_tracks_icon"
                     android:paddingBottom="@dimen/albums_tracks_grid_padding"
                     android:paddingEnd="@dimen/albums_tracks_grid_padding"
                     android:paddingRight="@dimen/albums_tracks_grid_padding"

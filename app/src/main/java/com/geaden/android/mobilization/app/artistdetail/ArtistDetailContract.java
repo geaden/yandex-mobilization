@@ -43,6 +43,13 @@ public interface ArtistDetailContract {
         void showCover(String coverLink);
 
         /**
+         * Shows cover as resource id.
+         *
+         * @param resourceId resource id to be shown as cover.
+         */
+        void showCover(Integer resourceId);
+
+        /**
          * Shows help message, if artist is missing.
          */
         void showMissingArtist();
@@ -68,6 +75,26 @@ public interface ArtistDetailContract {
          * @param artistLink artist's official web page link.
          */
         void showOpenArtistLinkFab(@Nullable String artistLink);
+
+        /**
+         * Hides open artist's link FAB.
+         */
+        void hideOpenArtistLinkFab();
+
+        /**
+         * Hides artist's name.
+         */
+        void hideName();
+
+        /**
+         * Hides artist's genres.
+         */
+        void hideGenres();
+
+        /**
+         * Hides artist's albums and tracks.
+         */
+        void hideAlbumsAndTracks();
     }
 
     interface UserActionsListener {
