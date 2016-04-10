@@ -50,7 +50,9 @@ public class ArtistsPresenterTest {
     @Test
     public void loadArtistsFromRepositoryAndLoadIntoView() {
         // Request artists.
-        mArtistsPresenter.loadArtists();
+        mArtistsPresenter.loadArtists(true);
+
+        verify(mArtistsRepository).refreshData();
 
         // Check that we are showing progress indicator
         verify(mArtistsView).setProgressIndicator(true);

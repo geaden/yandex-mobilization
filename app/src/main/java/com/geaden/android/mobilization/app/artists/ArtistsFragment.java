@@ -111,7 +111,7 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mActionsListener.loadArtists();
+                mActionsListener.loadArtists(true);
             }
         });
         return root;
@@ -120,7 +120,7 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        mActionsListener.loadArtists();
+        mActionsListener.loadArtists(false);
     }
 
     @Override

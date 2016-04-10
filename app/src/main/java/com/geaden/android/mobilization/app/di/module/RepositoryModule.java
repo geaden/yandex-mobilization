@@ -3,7 +3,7 @@ package com.geaden.android.mobilization.app.di.module;
 import android.content.Context;
 
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
-import com.geaden.android.mobilization.app.data.NetworkArtistsRepository;
+import com.geaden.android.mobilization.app.data.ArtistsRepositoryImpl;
 
 import javax.inject.Singleton;
 
@@ -27,6 +27,6 @@ public class RepositoryModule {
     @Provides
     @Singleton
     ArtistsRepository provideArtistRepository() {
-        return new NetworkArtistsRepository(mContext);
+        return new ArtistsRepositoryImpl(mContext);
     }
 }

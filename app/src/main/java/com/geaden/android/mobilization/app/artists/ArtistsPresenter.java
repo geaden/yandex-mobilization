@@ -26,10 +26,12 @@ public class ArtistsPresenter implements ArtistsContract.UserActionsListener {
     }
 
     @Override
-    public void loadArtists() {
+    public void loadArtists(boolean forceUpdate) {
         mArtistsView.setProgressIndicator(true);
 
-        // TODO: Espresso Idling...
+        if (forceUpdate) {
+            mArtistsRepository.refreshData();
+        }
 
         mArtistsRepository.getArtists(new ArtistsRepository.LoadArtistCallback() {
             @Override

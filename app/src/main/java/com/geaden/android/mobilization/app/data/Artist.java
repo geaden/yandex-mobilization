@@ -1,5 +1,9 @@
 package com.geaden.android.mobilization.app.data;
 
+import com.geaden.android.mobilization.app.models.ArtistModel;
+import com.geaden.android.mobilization.app.util.Constants;
+import com.google.common.base.Joiner;
+
 /**
  * Immutable Artist model.
  *
@@ -79,5 +83,24 @@ public final class Artist {
                 ", " + mName +
                 ", " + mDescription +
                 "}";
+    }
+
+    /**
+     * Helper method to convert to model class.
+     *
+     * @return the instance of {@link ArtistModel}
+     */
+    public ArtistModel toModel() {
+        ArtistModel artistModel = new ArtistModel();
+        artistModel.setId(mId);
+        artistModel.setName(mName);
+        artistModel.setDescription(mDescription);
+        artistModel.setCoverBig(mCover.getBig());
+        artistModel.setCoverSmall(mCover.getSmall());
+        artistModel.setGenres(Joiner.on(Constants.GENRES_SEPARATOR).skipNulls().join(mGenres));
+        artistModel.setLink(mLink);
+        artistModel.setAlbums(mAlbums);
+        artistModel.setTracks(mTracks);
+        return artistModel;
     }
 }

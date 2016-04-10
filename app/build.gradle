@@ -58,8 +58,12 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:$rootProject.ext.okHttpVersion"
     compile "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.okHttpVersion"
 
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.ext.dbflowVersion"
+    compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.ext.dbflowVersion"
+
     // DI
     apt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.ext.dbflowVersion"
 
     // Dependencies for local unit tests
     testCompile("junit:junit:$rootProject.ext.junitVersion") {
@@ -75,6 +79,8 @@ dependencies {
     // Android Testing Support Library's runner and rules
     androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
     androidTestCompile "com.android.support.test:rules:$rootProject.ext.runnerVersion"
+
+    androidTestCompile "com.squareup.okhttp3:mockwebserver:$rootProject.ext.okHttpVersion"
 
     // Espresso UI Testing dependencies.
     androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
@@ -106,7 +112,7 @@ at runtime. More info in this tools bug: (https://code.google.com/p/android/issu
 }
 
 // Copy res directory from unit-tests
-task copyResDirectoryToClasses(type: Copy){
+task copyResDirectoryToClasses(type: Copy) {
     from "${projectDir}/src/test/res"
     into "${buildDir}/intermediates/classes/test/debug"
 }

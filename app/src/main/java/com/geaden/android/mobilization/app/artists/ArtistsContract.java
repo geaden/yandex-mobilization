@@ -42,8 +42,10 @@ public interface ArtistsContract {
     interface UserActionsListener {
         /**
          * Loads artists from internal repository or Api.
+         *
+         * @param forceUpdate flag that indicates to re-retrieve data from network.
          */
-        void loadArtists();
+        void loadArtists(boolean forceUpdate);
 
         /**
          * Opens artists details.

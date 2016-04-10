@@ -59,8 +59,8 @@ public class MockArtistsRepository implements ArtistsRepository {
     private static void addArtist(String name, String description) {
         Artist newArtist = new Artist(atomicId.getAndDecrement(), name, description);
         newArtist.setGenres(TEST_GENRES);
-        newArtist.setTracks(5);
-        newArtist.setAlbums(5);
+        newArtist.setTracks(42);
+        newArtist.setAlbums(42);
         newArtist.setLink("https://ya.ru");
         newArtist.setCover(new Cover(SMALL, BIG));
         ARTISTS_DATA.put(newArtist.getId(), newArtist);
@@ -68,7 +68,6 @@ public class MockArtistsRepository implements ArtistsRepository {
 
     @Override
     public void getArtist(@NonNull long artistId, @NonNull GetArtistCallback callback) {
-        // TODO: Add simulate network latency.
         Artist artist = ARTISTS_DATA.get(artistId);
         callback.onArtistLoaded(artist);
     }

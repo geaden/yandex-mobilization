@@ -86,7 +86,7 @@ public class ArtistDetailScreenTest {
         onView(withId(R.id.artist_details_description)).check(matches(withText("bar")));
         onView(withId(R.id.artist_details_genres)).check(matches(withText("pop, jazz, funk")));
         onView(withId(R.id.artist_details_albums_tracks)).check(
-                matches(withText("5 albums • 5 tracks")));
+                matches(withText("42 albums • 42 tracks")));
     }
 
     @Test

@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.geaden.android.mobilization.app.ArtistsApplication;
 import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
+import com.geaden.android.mobilization.app.util.Constants;
 import com.google.common.base.Joiner;
 
 import javax.inject.Inject;
@@ -151,7 +152,7 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
 
     @Override
     public void showGenres(String[] genres) {
-        mArtistGenres.setText(Joiner.on(", ").skipNulls()
+        mArtistGenres.setText(Joiner.on(Constants.GENRES_SEPARATOR).skipNulls()
                 .join(genres));
     }
 
@@ -172,6 +173,5 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
                 }
             });
         }
-
     }
 }
