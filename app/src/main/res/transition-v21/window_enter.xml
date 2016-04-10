@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
+    android:transitionOrdering="sequential">
+
+    <explode>
+        <targets>
+            <target android:targetClass="android.widget.TextView" />
+            <target android:targetClass="android.widget.FrameLayout" />
+            <target android:targetClass="android.widget.LinearLayout" />
+            <target android:targetClass="android.widget.ImageView" />
+        </targets>
+    </explode>
+
+    <transition
+        class="com.geaden.android.mobilization.app.util.ScaleTransition"
+        android:interpolator="@android:interpolator/overshoot">
+        <targets>
+            <target android:targetId="@id/artist_link_fab" />
+        </targets>
+    </transition>
+
+</transitionSet>

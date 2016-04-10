@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
+    <fade>
+        <targets>
+            <target android:targetClass="android.widget.TextView" />
+            <target android:targetClass="android.widget.FrameLayout" />
+            <target android:targetClass="android.widget.LinearLayout" />
+            <target android:targetClass="android.widget.ImageView" />
+        </targets>
+    </fade>
+</transitionSet>

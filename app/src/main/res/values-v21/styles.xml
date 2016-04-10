@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Base.AppTheme">
+        <!-- Enable window content transitions -->
+        <item name="android:windowContentTransitions">true</item>
+
+        <!-- Specify enter and exit transitions -->
+        <item name="android:windowExitTransition">@transition/fade</item>
+        <item name="android:windowReenterTransition">@transition/fade</item>
+        <item name="android:windowEnterTransition">@transition/window_enter</item>
+        <item name="android:windowReturnTransition">@transition/window_return</item>
+
+        <!-- Specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">@transition/shared_move</item>
+        <item name="android:windowSharedElementExitTransition">@transition/shared_move</item>
+
+        <item name="android:windowAllowEnterTransitionOverlap">false</item>
+    </style>
+</resources>

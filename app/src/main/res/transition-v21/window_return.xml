@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
+    android:transitionOrdering="sequential">
+
+    <transition
+        class="com.geaden.android.mobilization.app.util.ScaleTransition"
+        android:duration="@android:integer/config_shortAnimTime"
+        android:interpolator="@android:interpolator/fast_out_linear_in">
+        <targets>
+            <target android:targetId="@id/artist_link_fab" />
+        </targets>
+    </transition>
+
+    <explode>
+        <targets>
+            <target android:targetClass="android.widget.TextView" />
+            <target android:targetClass="android.widget.FrameLayout" />
+            <target android:targetClass="android.widget.LinearLayout" />
+            <target android:targetClass="android.widget.ImageView" />
+            <target android:excludeId="@id/artist_link_fab" />
+        </targets>
+    </explode>
+
+</transitionSet>
