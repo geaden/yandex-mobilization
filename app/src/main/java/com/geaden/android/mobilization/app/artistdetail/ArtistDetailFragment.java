@@ -6,6 +6,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,10 +126,13 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
                 }
                 if (scrollRange + verticalOffset == 0) {
                     mCollapstinToolbar.setTitle(mName);
+                    mToolbar.setBackground(null);
                     hideName();
                     isShown = true;
                 } else if (isShown) {
                     mCollapstinToolbar.setTitle(null);
+                    mToolbar.setBackground(ContextCompat.getDrawable(getActivity(),
+                            R.drawable.overlay_bg_top_down));
                     showName(mName);
                     isShown = false;
                 }
@@ -159,6 +163,8 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
     @Override
     public void showName(String name) {
         mName = name;
+        mArtistName.setBackground(ContextCompat.getDrawable(getActivity(),
+                R.drawable.overlay_bg_bottom_up));
         mArtistName.setText(name);
     }
 
@@ -203,17 +209,22 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
 
     @Override
     public void showGenres(String[] genres) {
+        mArtistGenresIcon.setVisibility(View.VISIBLE);
+        mArtistGenres.setVisibility(View.VISIBLE);
         mArtistGenres.setText(Joiner.on(Constants.GENRES_SEPARATOR).skipNulls()
                 .join(genres));
     }
 
     @Override
     public void showAlbumsAndTracks(int albums, int tracks) {
+        mArtistAlbumsTracksIcon.setVisibility(View.VISIBLE);
+        mArtistAlbumsTrack.setVisibility(View.VISIBLE);
         mArtistAlbumsTrack.setText(getString(R.string.artist_details_albums_tracks, albums, tracks));
     }
 
     @Override
     public void showOpenArtistLinkFab(@Nullable final String artistLink) {
+        mArtistLinkFab.setVisibility(View.VISIBLE);
         mArtistLinkFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,6 +241,7 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
     @Override
     public void hideName() {
         mArtistName.setText("");
+        mArtistName.setBackground(null);
     }
 
     @Override

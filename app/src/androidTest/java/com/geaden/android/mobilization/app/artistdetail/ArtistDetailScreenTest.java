@@ -73,9 +73,7 @@ public class ArtistDetailScreenTest {
         Intent startIntent = new Intent();
         startIntent.putExtra(ArtistDetailActivity.EXTRA_ARTIST_ID, 1L);
         mArtistDetailActivity.launchActivity(startIntent);
-
         registerIdlingResource();
-
         Intents.init();
     }
 
@@ -93,13 +91,7 @@ public class ArtistDetailScreenTest {
     public void clickOnFab_OpensBrowser() throws Exception {
         // Check that artists name, description, tracks, albums and image is displayed
         onView(withId(R.id.artist_link_fab)).perform(click());
-
         intended(allOf(hasAction(equalTo(Intent.ACTION_VIEW)), toPackage("com.android.browser")));
-    }
-
-    @Test
-    public void incorrectArtist_showMissingText() {
-        fail();
     }
 
     /**

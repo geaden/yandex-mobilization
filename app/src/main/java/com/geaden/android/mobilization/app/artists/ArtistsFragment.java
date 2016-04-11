@@ -1,6 +1,7 @@
 package com.geaden.android.mobilization.app.artists;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -73,7 +74,7 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
         super.onCreate(savedInstanceState);
         // Assign singleton instances to repository field annotated with Inject.
         ((ArtistsApplication) getActivity().getApplication()).getRepositoryComponent().inject(this);
-        mArtistsAdapter = new ArtistsAdapter(getActivity(), new ArrayList<Artist>(0), mItemListener);
+        mArtistsAdapter = new ArtistsAdapter(new ArrayList<Artist>(0), mItemListener);
     }
 
     // Open artist details on click.
@@ -103,8 +104,10 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
+        mRecyclerView.addItemDecoration(new MarginDecoration(getActivity()));
 
         mArtistsAdapter.setEmptyView(mEmptyView);
+        mArtistsAdapter.setContext(getActivity());
 
         // Pull-to-refresh
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -119,6 +122,8 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     @Override
     public void onResume() {
         super.onResume();
+        // Re-set adapter's context.
+        mArtistsAdapter.setContext(getActivity());
         mActionsListener.loadArtists(false);
     }
 
@@ -158,10 +163,13 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
         private ArtistItemListener mItemListener;
         private View mEmptyView;
 
-        public ArtistsAdapter(Context context, List<Artist> artists, ArtistItemListener itemListener) {
+        public ArtistsAdapter(List<Artist> artists, ArtistItemListener itemListener) {
             setList(artists);
-            mContext = context;
             mItemListener = itemListener;
+        }
+
+        public void setContext(Context context) {
+            mContext = context;
         }
 
         @Override
@@ -264,6 +272,23 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
                 Artist artist = getItem(position);
                 mItemListener.onArtistClick(artist, coverSmall);
             }
+        }
+    }
+
+    /**
+     * Artists grid decoration.
+     */
+    public static class MarginDecoration extends RecyclerView.ItemDecoration {
+        private int margin;
+
+        public MarginDecoration(Context context) {
+            margin = context.getResources().getDimensionPixelSize(R.dimen.item_margin);
+        }
+
+        @Override
+        public void getItemOffsets(
+                Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            outRect.set(margin, margin, margin, margin);
         }
     }
 

@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/artist_list_card_size"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/artist_list_card_margin"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"

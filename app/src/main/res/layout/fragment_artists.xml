@@ -15,10 +15,6 @@
             android:id="@+id/artists_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/artists_activity_vertical_margin"
-            android:paddingLeft="@dimen/artists_activity_horizontal_margin"
-            android:paddingRight="@dimen/artists_activity_horizontal_margin"
-            android:paddingTop="@dimen/artists_activity_vertical_margin"
             tools:listitem="@layout/item_artist" />
     </android.support.v4.widget.SwipeRefreshLayout>
 

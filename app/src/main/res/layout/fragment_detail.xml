@@ -24,9 +24,9 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleTextAppearance="@android:color/transparent"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
+            app:expandedTitleTextAppearance="@android:color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
@@ -64,6 +64,7 @@
                 android:textColor="#fff"
                 android:textSize="@dimen/artist_detail_name_text_size"
                 android:textStyle="bold"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
                 tools:text="Foo" />
 
         </android.support.design.widget.CollapsingToolbarLayout>

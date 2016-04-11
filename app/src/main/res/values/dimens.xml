@@ -10,7 +10,7 @@
     <dimen name="artist_list_card_text_padding">8dp</dimen>
     <dimen name="artist_list_card_text_padding_bottom">8dp</dimen>
     <dimen name="artist_list_card_margin">4dp</dimen>
-    <dimen name="artist_list_card_size">200dp</dimen>
+    <dimen name="artist_list_card_size">180dp</dimen>
     <dimen name="artist_list_card_default_radius">2dp</dimen>
 
     <dimen name="app_bar_elevation">4dp</dimen>
@@ -26,6 +26,7 @@
     <dimen name="albums_tracks_grid_padding">8dp</dimen>
     <dimen name="artist_detail_name_text_size">32sp</dimen>
     <dimen name="artist_detail_name_padding_bottom">16dp</dimen>
-    <dimen name="artist_detail_name_padding_left">72dp</dimen>
-    <dimen name="artist_detail_cover_height">300dp</dimen>
+    <dimen name="artist_detail_name_padding_left">64dp</dimen>
+    <dimen name="artist_detail_cover_height">320dp</dimen>
+    <dimen name="item_margin">4dp</dimen>
 </resources>
