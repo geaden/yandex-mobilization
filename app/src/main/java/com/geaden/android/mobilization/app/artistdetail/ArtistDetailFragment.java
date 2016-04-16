@@ -115,6 +115,7 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
         getActivityCast().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getActivityCast().getSupportActionBar().setTitle(null);
 
+        // Add scroll listener to show toolbar title when collapsed.
         mAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShown = false;
             int scrollRange = -1;
@@ -170,13 +171,25 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
 
     @Override
     public void showDescription(String description) {
-        mArtistDescription.setText(description);
+        // Capitalize description.
+        String capitalizedDescription = Character.toUpperCase(description.charAt(0)) +
+                description.substring(1, description.length());
+        mArtistDescription.setText(capitalizedDescription);
     }
 
     @Override
     public void showCover(String coverLink) {
         Glide.with(this)
                 .load(coverLink)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .into(mCoverImage);
+    }
+
+    @Override
+    public void showCover(Integer resourceId) {
+        Glide.with(this)
+                .load(resourceId)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .into(new GlideDrawableImageViewTarget(mCoverImage) {
@@ -186,15 +199,6 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
                         super.onResourceReady(resource, animation);
                     }
                 });
-    }
-
-    @Override
-    public void showCover(Integer resourceId) {
-        Glide.with(this)
-                .load(resourceId)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
-                .into(mCoverImage);
     }
 
     @Override
@@ -209,22 +213,44 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
 
     @Override
     public void showGenres(String[] genres) {
-        mArtistGenresIcon.setVisibility(View.VISIBLE);
-        mArtistGenres.setVisibility(View.VISIBLE);
+        setVisible(mArtistGenresIcon);
+        setVisible(mArtistGenres);
         mArtistGenres.setText(Joiner.on(Constants.GENRES_SEPARATOR).skipNulls()
                 .join(genres));
     }
 
     @Override
     public void showAlbumsAndTracks(int albums, int tracks) {
-        mArtistAlbumsTracksIcon.setVisibility(View.VISIBLE);
-        mArtistAlbumsTrack.setVisibility(View.VISIBLE);
+        setVisible(mArtistAlbumsTracksIcon);
+        setVisible(mArtistAlbumsTrack);
         mArtistAlbumsTrack.setText(getString(R.string.artist_details_albums_tracks, albums, tracks));
+    }
+
+    /**
+     * Helper method to set visibility to #VISIBLE of a view.
+     *
+     * @param view the view to set visibility to.
+     */
+    private static void setVisible(View view) {
+        if (view.getVisibility() != View.VISIBLE) {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Helper method to set visibility to #GONE of a view.
+     *
+     * @param view the view to set visibility to.
+     */
+    private static void setGone(View view) {
+        if (view.getVisibility() != View.GONE) {
+            view.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void showOpenArtistLinkFab(@Nullable final String artistLink) {
-        mArtistLinkFab.setVisibility(View.VISIBLE);
+        setVisible(mArtistLinkFab);
         mArtistLinkFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,7 +261,7 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
 
     @Override
     public void hideOpenArtistLinkFab() {
-        mArtistLinkFab.setVisibility(View.GONE);
+        setGone(mArtistLinkFab);
     }
 
     @Override
@@ -246,13 +272,13 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
 
     @Override
     public void hideGenres() {
-        mArtistGenresIcon.setVisibility(View.GONE);
-        mArtistGenres.setVisibility(View.GONE);
+        setGone(mArtistGenresIcon);
+        setGone(mArtistGenres);
     }
 
     @Override
     public void hideAlbumsAndTracks() {
-        mArtistAlbumsTracksIcon.setVisibility(View.GONE);
-        mArtistAlbumsTrack.setVisibility(View.GONE);
+        setGone(mArtistAlbumsTracksIcon);
+        setGone(mArtistAlbumsTrack);
     }
 }

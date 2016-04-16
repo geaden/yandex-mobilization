@@ -16,7 +16,7 @@
     <dimen name="app_bar_elevation">4dp</dimen>
 
     <!-- Fab related -->
-    <dimen name="fab_margin">4dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_elevation">2dp</dimen>
 

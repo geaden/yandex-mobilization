@@ -27,9 +27,8 @@ public class ArtistsPresenter implements ArtistsContract.UserActionsListener {
 
     @Override
     public void loadArtists(boolean forceUpdate) {
-        mArtistsView.setProgressIndicator(true);
-
         if (forceUpdate) {
+            mArtistsView.setProgressIndicator(true);
             mArtistsRepository.refreshData();
         }
 

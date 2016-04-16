@@ -17,4 +17,10 @@
 
         <item name="android:windowAllowEnterTransitionOverlap">false</item>
     </style>
+
+    <style name="AppTheme.Detail" parent="AppTheme">
+        <!-- Support of collapsing toolbar -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
 </resources>
