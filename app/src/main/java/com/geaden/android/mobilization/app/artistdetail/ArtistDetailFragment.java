@@ -71,7 +71,7 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
     ImageView mArtistAlbumsTracksIcon;
 
     @Bind(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout mCollapstinToolbar;
+    CollapsingToolbarLayout mCollapsingToolbar;
 
     @Bind(R.id.appbar)
     AppBarLayout mAppBar;
@@ -126,12 +126,12 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    mCollapstinToolbar.setTitle(mName);
+                    mCollapsingToolbar.setTitle(mName);
                     mToolbar.setBackground(null);
                     hideName();
                     isShown = true;
                 } else if (isShown) {
-                    mCollapstinToolbar.setTitle(null);
+                    mCollapsingToolbar.setTitle(null);
                     mToolbar.setBackground(ContextCompat.getDrawable(getActivity(),
                             R.drawable.overlay_bg_top_down));
                     showName(mName);
@@ -139,7 +139,6 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
                 }
             }
         });
-
         return root;
     }
 

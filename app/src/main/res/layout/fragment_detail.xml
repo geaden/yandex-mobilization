@@ -50,6 +50,7 @@
                 android:background="@drawable/overlay_bg_bottom_up"
                 android:fontFamily="sans-serif-condensed"
                 android:lineSpacingMultiplier="0.9"
+                android:paddingTop="@dimen/artist_detail_name_padding_bottom"
                 android:paddingBottom="@dimen/artist_detail_name_padding_bottom"
                 android:paddingLeft="@dimen/artist_detail_name_padding_left"
                 android:paddingStart="@dimen/artist_detail_name_padding_left"
@@ -76,6 +77,7 @@
             android:paddingEnd="@dimen/artist_description_padding_end">
 
             <android.support.v7.widget.GridLayout
+                android:id="@+id/artist_genres_albums_tracks_grid"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:alignmentMode="alignBounds"

@@ -82,7 +82,7 @@ public class ArtistDetailActivity extends AppCompatActivity {
         // Add the NotesDetailFragment to the layout
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.contentFrame, detailFragment);
+        transaction.replace(R.id.contentFrame, detailFragment);
         transaction.commit();
     }
 }
