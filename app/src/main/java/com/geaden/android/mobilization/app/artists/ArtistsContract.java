@@ -35,6 +35,23 @@ public interface ArtistsContract {
          * @param coverView artist's cover.
          */
         void showArtistDetailUi(long artistId, android.view.View coverView);
+
+        /**
+         * Shows select order dialog.
+         */
+        void showSelectOrderDialog();
+
+        /**
+         * Shows select genres dialog.
+         *
+         * @param genres available genres for selection.
+         */
+        void showSelectGenresDialog(String[] genres);
+
+        /**
+         * Method to update empty view when needed.
+         */
+        void updateEmptyView();
     }
 
     /**
@@ -58,9 +75,20 @@ public interface ArtistsContract {
         /**
          * Loads artists by genres.
          *
-         * @param genres array of genres that artists have.
+         * @param genres    array of genres that artists have.
+         * @param allGenres indicates if all the genres were selected to show.
          */
-        void loadArtistsByGenre(@NonNull String[] genres);
+        void loadArtistsByGenres(@NonNull String[] genres, boolean allGenres);
+
+        /**
+         * Loads list of genres to select.
+         */
+        void loadGenres();
+
+        /**
+         * Allows user to select order.
+         */
+        void selectOrder();
 
         /**
          * Opens artists details.

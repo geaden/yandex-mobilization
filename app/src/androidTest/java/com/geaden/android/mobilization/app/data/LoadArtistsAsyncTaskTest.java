@@ -6,6 +6,8 @@ import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.geaden.android.mobilization.app.models.ArtistModel;
+import com.geaden.android.mobilization.app.models.GenreModel;
+import com.geaden.android.mobilization.app.models.GenreModel_ArtistModel;
 import com.geaden.android.mobilization.app.util.Constants;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -37,6 +39,8 @@ public class LoadArtistsAsyncTaskTest {
     @Before
     public void mockServer() throws Exception {
         SQLite.delete().from(ArtistModel.class).query();
+        SQLite.delete().from(GenreModel.class).query();
+        SQLite.delete().from(GenreModel_ArtistModel.class).query();
         mServer = new MockWebServer();
         mServer.start();
         Constants.ARTISTS_URL = mServer.url("/").toString();
@@ -60,6 +64,10 @@ public class LoadArtistsAsyncTaskTest {
         // Check that we store data in database.
         List<ArtistModel> models = SQLite.select().from(ArtistModel.class).queryList();
         assertEquals(3, models.size());
+
+        List<GenreModel> genres = SQLite.select().distinct()
+                .from(GenreModel.class).queryList();
+        assertEquals(5, genres.size());
     }
 
     /**

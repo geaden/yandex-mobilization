@@ -5,19 +5,15 @@ import com.geaden.android.mobilization.app.data.Cover;
 import com.geaden.android.mobilization.app.database.ArtistsDatabase;
 import com.geaden.android.mobilization.app.util.Constants;
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
-
-import java.util.Date;
 
 /**
  * Represents artist database model.
  *
  * @author Gennady Denisov
  */
-@ModelContainer
 @Table(database = ArtistsDatabase.class)
 public class ArtistModel extends BaseModel {
     @PrimaryKey
@@ -46,9 +42,6 @@ public class ArtistModel extends BaseModel {
 
     @Column
     String link;
-
-    @Column(name="created_at")
-    Date createAt;
 
     public void setId(long id) {
         this.id = id;
@@ -84,10 +77,6 @@ public class ArtistModel extends BaseModel {
 
     public void setLink(String link) {
         this.link = link;
-    }
-
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
     }
 
     /**

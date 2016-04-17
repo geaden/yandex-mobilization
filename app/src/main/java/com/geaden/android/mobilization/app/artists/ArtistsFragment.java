@@ -17,6 +17,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +40,7 @@ import com.geaden.android.mobilization.app.data.ArtistsRepository;
 import com.geaden.android.mobilization.app.data.LoadingStatus;
 import com.geaden.android.mobilization.app.util.Utility;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ArtistsFragment extends Fragment implements ArtistsContract.View,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private static final String TAG = ArtistsFragment.class.getSimpleName();
     @Inject
     ArtistsRepository mArtistsRepository;
 
@@ -80,9 +83,12 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
     private static final int TRACKS = 0;
     private static final int ALBUMS = 1;
 
-
     public ArtistsFragment() {
         setHasOptionsMenu(true);
+    }
+
+    public static ArtistsFragment newInstance() {
+        return new ArtistsFragment();
     }
 
     @Override
@@ -133,17 +139,59 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_artists_order:
-                showSelectOrderDialog();
+                mActionsListener.selectOrder();
+                return true;
+            case R.id.menu_artists_genres:
+                mActionsListener.loadGenres();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    /**
-     * Helper method to show selection order dialog.
-     */
-    private void showSelectOrderDialog() {
+    @Override
+    public void showSelectGenresDialog(final String[] genres) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // TODO: Populate already selected genres.
+        boolean[] checked = new boolean[genres.length];
+        int i = 0;
+        for (String genre : genres) {
+            checked[i++] = true;
+        }
+        final List<String> selectedGenres = Lists.newArrayList();
+        builder.setTitle(R.string.artists_genres_selection_title)
+                .setMultiChoiceItems(genres,
+                        checked,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                String genre = genres[which];
+                                if (isChecked) {
+                                    selectedGenres.add(genre);
+                                } else {
+                                    selectedGenres.remove(genre);
+                                }
+                            }
+                        }
+                ).setCancelable(false).setNeutralButton(android.R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "Selected genres " + selectedGenres);
+                        if (selectedGenres.size() == genres.length) {
+                            mActionsListener.loadArtistsByGenres(new String[0], true);
+                        } else {
+                            mActionsListener.loadArtistsByGenres(
+                                    selectedGenres.toArray(new String[selectedGenres.size()]), false);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+        builder.show();
+    }
+
+    @Override
+    public void showSelectOrderDialog() {
         // Prepare sort order dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get currently selected sort order
@@ -187,10 +235,8 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
         }
     }
 
-    /**
-     * Helper method that updates empty view.
-     */
-    private void updateEmptyView() {
+    @Override
+    public void updateEmptyView() {
         @LoadingStatus int loadingStatus = Utility.getLoadingStatus(getActivity());
         switch (loadingStatus) {
             case LoadingStatus.LOADING:
@@ -206,12 +252,8 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
                 mEmptyView.setText(R.string.unknown_error);
                 break;
             default:
-                throw new UnsupportedOperationException("unknown loading state " + loadingStatus);
+                throw new UnsupportedOperationException("Unknown loading state " + loadingStatus);
         }
-    }
-
-    public static ArtistsFragment newInstance() {
-        return new ArtistsFragment();
     }
 
     @Override

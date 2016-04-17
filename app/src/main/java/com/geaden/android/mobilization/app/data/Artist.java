@@ -1,8 +1,16 @@
 package com.geaden.android.mobilization.app.data;
 
 import com.geaden.android.mobilization.app.models.ArtistModel;
+import com.geaden.android.mobilization.app.models.GenreModel;
+import com.geaden.android.mobilization.app.models.GenreModel_ArtistModel;
 import com.geaden.android.mobilization.app.util.Constants;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.raizlabs.android.dbflow.runtime.TransactionManager;
+import com.raizlabs.android.dbflow.runtime.transaction.process.InsertModelTransaction;
+import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
+
+import java.util.List;
 
 /**
  * Immutable Artist model.
@@ -102,5 +110,28 @@ public final class Artist {
         artistModel.setAlbums(mAlbums);
         artistModel.setTracks(mTracks);
         return artistModel;
+    }
+
+    /**
+     * Saves genres belonging to the artist to the databases.
+     *
+     * @param async if save should performed in async mode.
+     */
+    public void saveGenres(boolean async) {
+        List<GenreModel_ArtistModel> genreModelArtistModels = Lists.newArrayList();
+        for (String genre : getGenres()) {
+            GenreModel genreModel = new GenreModel();
+            genreModel.setName(genre);
+            genreModel.save();
+            GenreModel_ArtistModel genreModelArtistModel = new GenreModel_ArtistModel();
+            genreModelArtistModel.setArtistModel(toModel());
+            genreModelArtistModel.setGenreModel(genreModel);
+            genreModelArtistModels.add(genreModelArtistModel);
+        }
+        if (async) {
+            TransactionManager.getInstance().saveOnSaveQueue(genreModelArtistModels);
+            return;
+        }
+        new InsertModelTransaction<>(ProcessModelInfo.withModels(genreModelArtistModels)).onExecute();
     }
 }

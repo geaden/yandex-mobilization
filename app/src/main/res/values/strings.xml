@@ -29,7 +29,7 @@
     <string name="pref_order_by_tracks" translatable="false">tracks</string>
     <string name="pref_order_by_albums" translatable="false">albums</string>
     <string name="pref_default_order" translatable="false">@string/pref_order_by_tracks</string>
-    <string name="artists_menu_title_order">Order by...</string>
+    <string name="artists_menu_title_order">Order by…</string>
     <string name="artists_order_selection_title">Select order</string>
     <string name="pref_order_by_tracks_title">Tracks</string>
     <string name="pref_order_by_albums_title">Albums</string>
@@ -39,4 +39,8 @@
     <string name="network_error">Connection not available.</string>
     <string name="not_found">No artists found :(</string>
     <string name="unknown_error">Unknown error</string>
+
+    <!-- Genres -->
+    <string name="artists_menu_title_genres">Genres…</string>
+    <string name="artists_genres_selection_title">Select genres</string>
 </resources>

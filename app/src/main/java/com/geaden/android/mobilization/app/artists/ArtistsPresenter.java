@@ -55,13 +55,43 @@ public class ArtistsPresenter implements ArtistsContract.UserActionsListener {
     }
 
     @Override
-    public void loadArtistsByGenre(@NonNull String[] genres) {
-        // TODO: Implement this.
+    public void loadArtistsByGenres(@NonNull String[] genres, boolean allGenres) {
+        mArtistsView.setProgressIndicator(true);
+
+        ArtistsRepository.LoadArtistsCallback callback = new ArtistsRepository.LoadArtistsCallback() {
+            @Override
+            public void onArtistsLoaded(List<Artist> artists) {
+                mArtistsView.setProgressIndicator(false);
+                mArtistsView.showArtists(artists);
+            }
+        };
+
+        if (allGenres) {
+            mArtistsRepository.getArtists(callback);
+            return;
+        }
+        mArtistsRepository.findArtistsByGenres(genres, callback);
     }
 
     @Override
     public void openArtistDetails(@NonNull Artist requestedArtist, @NonNull android.view.View coverView) {
         checkNotNull(requestedArtist, "requested artist cannot be null");
         mArtistsView.showArtistDetailUi(requestedArtist.getId(), coverView);
+    }
+
+    @Override
+    public void loadGenres() {
+        mArtistsRepository.getGenres(new ArtistsRepository.LoadGenresCallback() {
+            @Override
+            public void onGenresLoaded(String[] genres) {
+                mArtistsView.showSelectGenresDialog(genres);
+            }
+        });
+
+    }
+
+    @Override
+    public void selectOrder() {
+        mArtistsView.showSelectOrderDialog();
     }
 }

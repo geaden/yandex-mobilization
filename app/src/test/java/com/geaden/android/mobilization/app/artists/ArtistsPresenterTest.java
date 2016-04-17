@@ -34,11 +34,16 @@ public class ArtistsPresenterTest {
 
     private static final List<Artist> FOUND_ARTISTS = Lists.newArrayList(new Artist(3L, "buz", "boo"));
 
+    private static final String[] GENRES = {"foo", "bar"};
+
     /**
      * {@link ArgumentCaptor} to capture data passed to callback.
      */
     @Captor
     private ArgumentCaptor<ArtistsRepository.LoadArtistsCallback> mLoadArtistsCallbackCaptor;
+
+    @Captor
+    private ArgumentCaptor<ArtistsRepository.LoadGenresCallback> mLoadGenresCallbackCaptor;
 
     @Mock
     private ArtistsContract.View mArtistsView;
@@ -87,6 +92,39 @@ public class ArtistsPresenterTest {
         // The progress indicator is hidden and found artists artists are shown in UI.
         verify(mArtistsView).setProgressIndicator(false);
         verify(mArtistsView).showArtists(FOUND_ARTISTS);
+    }
+
+    @Test
+    public void findArtistsByGenresLoadIntoView() {
+        mArtistsPresenter.loadArtistsByGenres(GENRES, false);
+
+        // Check that we are showing progress indicator.
+        verify(mArtistsView).setProgressIndicator(true);
+
+        // Add stub to callback on find artists.
+        verify(mArtistsRepository).findArtistsByGenres(eq(GENRES), mLoadArtistsCallbackCaptor.capture());
+        mLoadArtistsCallbackCaptor.getValue().onArtistsLoaded(FOUND_ARTISTS);
+
+        // The progress indicator is hidden and found artists artists are shown in UI.
+        verify(mArtistsView).setProgressIndicator(false);
+        verify(mArtistsView).showArtists(FOUND_ARTISTS);
+    }
+
+    @Test
+    public void selectOrderShowsDialog() {
+        mArtistsPresenter.selectOrder();
+        verify(mArtistsView).showSelectOrderDialog();
+    }
+
+    @Test
+    public void loadGenresShowsDialog() {
+        mArtistsPresenter.loadGenres();
+
+        verify(mArtistsRepository).getGenres(mLoadGenresCallbackCaptor.capture());
+        mLoadGenresCallbackCaptor.getValue().onGenresLoaded(GENRES);
+
+        // Dialog with required genres is shown
+        mArtistsView.showSelectGenresDialog(GENRES);
     }
 
     @Test

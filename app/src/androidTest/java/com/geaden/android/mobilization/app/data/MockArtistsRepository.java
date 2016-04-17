@@ -21,7 +21,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class MockArtistsRepository implements ArtistsRepository {
 
     private static final ArrayMap<Long, Artist> ARTISTS_DATA;
-    private static final long SERVICE_LATENCY_IN_MILLIS = 2000;
+    private static final long LONG_SERVICE_LATENCY_IN_MILLIS = 2000;
+    private static final long SHORT_SERVICE_LATENCY_IN_MILLIS = 1000;
 
     private static final String SMALL = "file:///android_asset/lenna.png";
     private static final String BIG = "file:///android_asset/lenna.png";
@@ -61,7 +62,7 @@ public class MockArtistsRepository implements ArtistsRepository {
                 List<Artist> artists = new ArrayList<>(ARTISTS_DATA.values());
                 callback.onArtistsLoaded(artists);
             }
-        }, SERVICE_LATENCY_IN_MILLIS);
+        }, LONG_SERVICE_LATENCY_IN_MILLIS);
     }
 
     private static void addArtist(String name, String description) {
@@ -106,11 +107,25 @@ public class MockArtistsRepository implements ArtistsRepository {
                 }
                 callback.onArtistsLoaded(foundArtists);
             }
-        }, 2000);
+        }, SHORT_SERVICE_LATENCY_IN_MILLIS);
     }
 
     @Override
     public void findArtistsByGenres(@NonNull String[] genres, @NonNull LoadArtistsCallback callback) {
 
+    }
+
+    @Override
+    public void getGenres(@NonNull final LoadGenresCallback callback) {
+        // Delay the execution.
+        mCountingIdlingResource.increment();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mCountingIdlingResource.decrement();
+                callback.onGenresLoaded(new String[]{"foo", "bar"});
+            }
+        }, SHORT_SERVICE_LATENCY_IN_MILLIS);
     }
 }

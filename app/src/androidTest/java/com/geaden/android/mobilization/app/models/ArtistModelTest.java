@@ -26,19 +26,19 @@ import static org.junit.Assert.assertTrue;
 @SmallTest
 @RunWith(AndroidJUnit4.class)
 public class ArtistModelTest {
-    private final String TEST_NAME = "foo";
-    private final String TEST_DESCRIPTION = "bar";
+    public static final String TEST_NAME = "foo";
+    public static final String TEST_DESCRIPTION = "bar";
 
-    private final String[] TEST_GENRES = {"foo", "bar"};
+    public static final String[] TEST_GENRES = {"foo", "bar"};
 
-    private final String SMALL = "small";
-    private final String BIG = "big";
+    public static final String SMALL = "small";
+    public static final String BIG = "big";
 
-    private final String TEST_LINK = "https://ya.ru";
+    public static final String TEST_LINK = "https://ya.ru";
 
-    private final int FORTY_TWO = 42;
+    public static final int FORTY_TWO = 42;
 
-    private final AtomicLong atomicId = new AtomicLong(1L);
+    public static final AtomicLong atomicId = new AtomicLong(1L);
 
     @Before
     public void deleteDataFromDb() {
@@ -47,13 +47,7 @@ public class ArtistModelTest {
 
     @Test
     public void loadArtistsFromDb() {
-        Artist newArtist = new Artist(atomicId.getAndDecrement(),
-                TEST_NAME, TEST_DESCRIPTION);
-        newArtist.setGenres(TEST_GENRES);
-        newArtist.setTracks(FORTY_TWO);
-        newArtist.setAlbums(FORTY_TWO);
-        newArtist.setLink("https://ya.ru");
-        newArtist.setCover(new Cover(SMALL, BIG));
+        Artist newArtist = saveArtist(TEST_NAME, TEST_DESCRIPTION, TEST_GENRES);
 
         newArtist.toModel().save();
 
@@ -73,5 +67,25 @@ public class ArtistModelTest {
         assertEquals(FORTY_TWO, artist.getAlbums());
         assertEquals(SMALL, artist.getCover().getSmall());
         assertEquals(BIG, artist.getCover().getBig());
+    }
+
+    /**
+     * Helper method, that saves artist to database.
+     *
+     * @param name        artist name.
+     * @param description artist description.
+     * @param genres      genres.
+     * @return save artist.
+     */
+    public static Artist saveArtist(String name, String description, String[] genres) {
+        // Add new artists wit new genre
+        Artist newArtist = new Artist(atomicId.getAndDecrement(), name, description);
+        newArtist.setGenres(genres);
+        newArtist.setTracks(FORTY_TWO);
+        newArtist.setAlbums(FORTY_TWO);
+        newArtist.setLink("https://ya.ru");
+        newArtist.setCover(new Cover(SMALL, BIG));
+        newArtist.toModel().save();
+        return newArtist;
     }
 }

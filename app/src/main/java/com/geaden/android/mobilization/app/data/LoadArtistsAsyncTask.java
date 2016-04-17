@@ -12,15 +12,14 @@ import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.models.ArtistModel;
 import com.geaden.android.mobilization.app.util.Constants;
 import com.geaden.android.mobilization.app.util.Utility;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.raizlabs.android.dbflow.runtime.transaction.process.InsertModelTransaction;
 import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import okhttp3.Cache;
@@ -52,7 +51,7 @@ public class LoadArtistsAsyncTask extends AsyncTask<Context, Void, List<Artist>>
     protected List<Artist> doInBackground(Context... params) {
         mContext = params[0];
 
-        List<Artist> artists = new ArrayList<>(0);
+        List<Artist> artists = Lists.newArrayList();
 
         ConnectivityManager cm = (ConnectivityManager)
                 mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -93,33 +92,47 @@ public class LoadArtistsAsyncTask extends AsyncTask<Context, Void, List<Artist>>
             Response response = mClient.newCall(request).execute();
 
             if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
+                Utility.setLoadingStatus(mContext, LoadingStatus.ERROR);
+                return artists;
             }
 
             Artist[] artistsArray = gson.fromJson(response.body().charStream(), Artist[].class);
 
-            List<ArtistModel> models = new ArrayList<>();
+            List<ArtistModel> models = Lists.newArrayList();
 
-            // Save retrieved artists to database synchronously
+            // Save genres to database.
             for (Artist artist : artistsArray) {
-                ArtistModel artistModel = artist.toModel();
-                artistModel.setCreateAt(new Date());
-                models.add(artistModel);
+                artist.saveGenres(true);
+                models.add(artist.toModel());
             }
+
+            // Save retrieved artists to database synchronously.
             new InsertModelTransaction<>(ProcessModelInfo.withModels(models)).onExecute();
-            return Arrays.asList(artistsArray);
+
+            // Retrieve list of artists with preferred order.
+            models = SQLite.select()
+                    .from(ArtistModel.class)
+                    .orderBy(ArtistsRepositoryImpl.getOrder(mContext), false)
+                    .queryList();
+
+            for (ArtistModel model : models) {
+                artists.add(model.toArtist());
+            }
+
+            if (artists.size() == 0) {
+                Utility.setLoadingStatus(mContext, LoadingStatus.NOT_FOUND);
+            }
+            return artists;
         } catch (IOException e) {
             Log.e(TAG, "Unexpected exception", e);
+            Utility.setLoadingStatus(mContext, LoadingStatus.ERROR);
+            return artists;
         }
-        return artists;
     }
 
     @Override
     protected void onPostExecute(List<Artist> artists) {
         super.onPostExecute(artists);
-        if (artists.size() == 0) {
-            Utility.setLoadingStatus(mContext, LoadingStatus.NOT_FOUND);
-        }
         mCallback.onArtistsLoaded(artists);
     }
 }

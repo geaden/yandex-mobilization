@@ -89,9 +89,6 @@ public class ArtistsActivityScreen {
 
     @Test
     public void showArtistsList() {
-        // TODO: Verify empty text is shown...
-//        onView(withId(R.id.empty)).check(matches(isDisplayed()));
-
         // Check proper number of items loaded from repository.
         onView(withId(R.id.artists_list)).check(ArtistsViewAssertions.hasItemsCount(3));
 
@@ -131,6 +128,16 @@ public class ArtistsActivityScreen {
         onView(withId(R.id.menu_artists_search)).perform(click());
         onView(withId(android.support.design.R.id.search_src_text)).perform(typeText("zoo"));
         onView(withId(R.id.empty)).check(matches(withText(R.string.not_found)));
+    }
+
+    @Test
+    public void shouldSelectGenres() {
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withText(R.string.artists_menu_title_genres)).perform(click());
+        onView(withText(R.string.artists_genres_selection_title)).check(matches(isDisplayed()));
+        onView(withText("foo")).perform(click());
+        onView(withText("bar")).perform(click());
+        // TODO: Check that items are stored in preferences.
     }
 
     @After

@@ -11,4 +11,8 @@
         android:id="@+id/menu_artists_order"
         android:title="@string/artists_menu_title_order"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_artists_genres"
+        android:title="@string/artists_menu_title_genres"
+        app:showAsAction="never" />
 </menu>

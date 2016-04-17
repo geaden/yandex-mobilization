@@ -69,4 +69,24 @@ public interface ArtistsRepository {
          */
         void onArtistLoaded(Artist artist);
     }
+
+    /**
+     * Method to load genres.
+     *
+     * @param callback the callback handling genres loading.
+     */
+    void getGenres(@NonNull LoadGenresCallback callback);
+
+
+    /**
+     * Callback to handle genres loading.
+     */
+    interface LoadGenresCallback {
+        /**
+         * Called when genres are loaded.
+         *
+         * @param genres array of genres.
+         */
+        void onGenresLoaded(String[] genres);
+    }
 }
