@@ -1,5 +1,6 @@
 package com.geaden.android.mobilization.app.di.modules;
 
+import android.content.Context;
 import android.support.test.espresso.idling.CountingIdlingResource;
 
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
@@ -18,16 +19,19 @@ import dagger.Provides;
 @Module
 public class TestRepositoryModule {
 
+    private Context mContext;
     // Idling resource to tell Espresso that some background task is running
     private final CountingIdlingResource mCountingIdlingResource;
 
-    public TestRepositoryModule(CountingIdlingResource countingIdlingResource) {
+    public TestRepositoryModule(Context context,
+                                CountingIdlingResource countingIdlingResource) {
+        mContext = context;
         mCountingIdlingResource = countingIdlingResource;
     }
 
     @Provides
     @Singleton
     ArtistsRepository provideArtistsRepository() {
-        return new MockArtistsRepository(mCountingIdlingResource);
+        return new MockArtistsRepository(mContext, mCountingIdlingResource);
     }
 }

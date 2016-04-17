@@ -1,10 +1,13 @@
 package com.geaden.android.mobilization.app.data;
 
+import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.core.deps.guava.collect.Lists;
 import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.util.ArrayMap;
+
+import com.geaden.android.mobilization.app.util.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +32,11 @@ public class MockArtistsRepository implements ArtistsRepository {
 
     // Idling resource to tell Espresso to wait...
     private final CountingIdlingResource mCountingIdlingResource;
+    private final Context mContext;
 
-    public MockArtistsRepository(CountingIdlingResource countingIdlingResource) {
+    public MockArtistsRepository(Context context,
+                                 CountingIdlingResource countingIdlingResource) {
+        mContext = context;
         mCountingIdlingResource = countingIdlingResource;
     }
 
@@ -44,6 +50,7 @@ public class MockArtistsRepository implements ArtistsRepository {
 
     @Override
     public void getArtists(@NonNull final LoadArtistsCallback callback) {
+        Utility.setLoadingStatus(mContext, LoadingStatus.LOADING);
         mCountingIdlingResource.increment();
         // Simulate network by delaying the execution.
         Handler handler = new Handler();
@@ -80,6 +87,7 @@ public class MockArtistsRepository implements ArtistsRepository {
 
     @Override
     public void findArtistsByName(@NonNull final String query, @NonNull final LoadArtistsCallback callback) {
+        Utility.setLoadingStatus(mContext, LoadingStatus.LOADING);
         mCountingIdlingResource.increment();
         // Simulate network by delaying the execution.
         Handler handler = new Handler();
@@ -93,9 +101,12 @@ public class MockArtistsRepository implements ArtistsRepository {
                         foundArtists.add(artist);
                     }
                 }
+                if (foundArtists.size() == 0) {
+                    Utility.setLoadingStatus(mContext, LoadingStatus.NOT_FOUND);
+                }
                 callback.onArtistsLoaded(foundArtists);
             }
-        }, 1000);
+        }, 2000);
     }
 
     @Override

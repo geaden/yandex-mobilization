@@ -35,6 +35,8 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
     public void getArtists(@NonNull final LoadArtistsCallback callback) {
         checkNotNull(callback);
 
+        Utility.setLoadingStatus(mContext, LoadingStatus.LOADING);
+
         // Initialize list of artists.
         final List<Artist> artists = Lists.newArrayList();
 
@@ -89,6 +91,9 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
     public void findArtistsByName(@NonNull String query, @NonNull final LoadArtistsCallback callback) {
         checkNotNull(query);
         checkNotNull(callback);
+
+        Utility.setLoadingStatus(mContext, LoadingStatus.LOADING);
+
         SQLite.select()
                 .from(ArtistModel.class)
                 .where(ArtistModel_Table.name.like('%' + query.toLowerCase() + '%'))
@@ -101,6 +106,9 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
                         List<Artist> artists = Lists.newArrayList();
                         for (ArtistModel model : models) {
                             artists.add(model.toArtist());
+                        }
+                        if (artists.size() == 0) {
+                            Utility.setLoadingStatus(mContext, LoadingStatus.NOT_FOUND);
                         }
                         callback.onArtistsLoaded(artists);
                     }

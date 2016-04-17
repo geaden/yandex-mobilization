@@ -7,6 +7,7 @@
 - [ ] Enhance transition from list to detail.
 - [ ] Custom view for top aligned cover.
 - [ ] Change title when drawer is toggled.
+- [x] Update loading state.
 - [x] Capitalize artist description.
 - [x] Search artist by name.
 - [ ] Filter by genre

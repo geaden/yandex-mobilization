@@ -3,6 +3,7 @@ package com.geaden.android.mobilization.app.artistdetail;
 import android.app.Application;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.espresso.intent.Intents;
@@ -33,7 +34,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.fail;
 
 /**
  * Test for artist's detail screen.
@@ -60,7 +60,9 @@ public class ArtistDetailScreenTest {
                                                            @NonNull ArtistDetailActivity activity) {
                             mIdlingResource = new CountingIdlingResource("MockArtistsRepository");
                             mTestRepositoryComponent = DaggerTestRepositoryComponent.builder()
-                                    .testRepositoryModule(new TestRepositoryModule(mIdlingResource))
+                                    .testRepositoryModule(new TestRepositoryModule(
+                                            InstrumentationRegistry.getTargetContext(),
+                                            mIdlingResource))
                                     .build();
                             ((ArtistsApplication) application).setRepositoryComponent(
                                     mTestRepositoryComponent);

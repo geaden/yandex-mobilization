@@ -69,7 +69,9 @@ public class ArtistsActivityScreen {
                                                            @NonNull ArtistsActivity activity) {
                             mIdlingResource = new CountingIdlingResource("MockArtistsRepository");
                             mTestRepositoryComponent = DaggerTestRepositoryComponent.builder()
-                                    .testRepositoryModule(new TestRepositoryModule(mIdlingResource))
+                                    .testRepositoryModule(new TestRepositoryModule(
+                                            InstrumentationRegistry.getTargetContext(),
+                                            mIdlingResource))
                                     .build();
                             ((ArtistsApplication) application).setRepositoryComponent(
                                     mTestRepositoryComponent);
@@ -122,6 +124,13 @@ public class ArtistsActivityScreen {
         String currentOrder = Utility.getPreferredOrder(InstrumentationRegistry.getTargetContext());
         assertThat(currentOrder,
                 is(InstrumentationRegistry.getTargetContext().getString(R.string.pref_order_by_albums)));
+    }
+
+    @Test
+    public void shouldUpdateEmptyView() {
+        onView(withId(R.id.menu_artists_search)).perform(click());
+        onView(withId(android.support.design.R.id.search_src_text)).perform(typeText("zoo"));
+        onView(withId(R.id.empty)).check(matches(withText(R.string.not_found)));
     }
 
     @After

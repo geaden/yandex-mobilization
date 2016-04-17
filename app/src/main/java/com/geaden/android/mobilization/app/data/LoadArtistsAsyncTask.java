@@ -1,13 +1,17 @@
 package com.geaden.android.mobilization.app.data;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.models.ArtistModel;
 import com.geaden.android.mobilization.app.util.Constants;
+import com.geaden.android.mobilization.app.util.Utility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.raizlabs.android.dbflow.runtime.transaction.process.InsertModelTransaction;
@@ -57,7 +61,11 @@ public class LoadArtistsAsyncTask extends AsyncTask<Context, Void, List<Artist>>
 
         if (ni == null || !ni.isConnected()) {
             Log.w(TAG, "Not online, not refreshing.");
-            // TODO: Update state...
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putInt(mContext.getString(R.string.pref_key_load_state),
+                    LoadingStatus.NETWORK_ERROR);
+            editor.apply();
             return artists;
         }
 
@@ -109,6 +117,9 @@ public class LoadArtistsAsyncTask extends AsyncTask<Context, Void, List<Artist>>
     @Override
     protected void onPostExecute(List<Artist> artists) {
         super.onPostExecute(artists);
+        if (artists.size() == 0) {
+            Utility.setLoadingStatus(mContext, LoadingStatus.NOT_FOUND);
+        }
         mCallback.onArtistsLoaded(artists);
     }
 }

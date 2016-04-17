@@ -36,4 +36,7 @@
 
     <!-- Other preferences key -->
     <string name="pref_key_load_state">pref_load_state</string>
+    <string name="network_error">Connection not available.</string>
+    <string name="not_found">No artists found :(</string>
+    <string name="unknown_error">Unknown error</string>
 </resources>

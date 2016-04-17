@@ -36,6 +36,7 @@ import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.artistdetail.ArtistDetailActivity;
 import com.geaden.android.mobilization.app.data.Artist;
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
+import com.geaden.android.mobilization.app.data.LoadingStatus;
 import com.geaden.android.mobilization.app.util.Utility;
 import com.google.common.base.Joiner;
 
@@ -190,8 +191,23 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
      * Helper method that updates empty view.
      */
     private void updateEmptyView() {
-        // TODO: Implement this...
-
+        @LoadingStatus int loadingStatus = Utility.getLoadingStatus(getActivity());
+        switch (loadingStatus) {
+            case LoadingStatus.LOADING:
+                mEmptyView.setText(R.string.loading);
+                break;
+            case LoadingStatus.NOT_FOUND:
+                mEmptyView.setText(R.string.not_found);
+                break;
+            case LoadingStatus.NETWORK_ERROR:
+                mEmptyView.setText(R.string.network_error);
+                break;
+            case LoadingStatus.ERROR:
+                mEmptyView.setText(R.string.unknown_error);
+                break;
+            default:
+                throw new UnsupportedOperationException("unknown loading state " + loadingStatus);
+        }
     }
 
     public static ArtistsFragment newInstance() {
