@@ -1,15 +1,22 @@
 package com.geaden.android.mobilization.app.artists;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -59,10 +66,56 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     TextView mEmptyView;
 
     private ArtistsAdapter mArtistsAdapter;
+    private SearchView mSearchView;
+    private MenuItem mSearchItem;
 
 
     public ArtistsFragment() {
+        setHasOptionsMenu(true);
+    }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_artists, menu);
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+
+        mSearchItem = menu.findItem(R.id.menu_artists_search);
+        mSearchView = (SearchView) mSearchItem.getActionView();
+
+        mSearchView.setQueryHint(getString(R.string.artists_search_hint));
+        mSearchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                if (!TextUtils.isEmpty(mSearchView.getQuery())) {
+                    mSearchView.setQuery(null, true);
+                }
+                return true;
+            }
+        });
+
+        // Set search query text listener...
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                if (!TextUtils.isEmpty(query)) {
+                    mActionsListener.loadArtistsByName(query);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Don't care about this.
+                return true;
+            }
+        });
     }
 
     public static ArtistsFragment newInstance() {
@@ -81,9 +134,23 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     ArtistItemListener mItemListener = new ArtistItemListener() {
         @Override
         public void onArtistClick(Artist clickedArtist, View coverView) {
+            resetSearchView();
             mActionsListener.openArtistDetails(clickedArtist, coverView);
         }
     };
+
+    /**
+     * Helper methods that resets state of search view and it's menu item.
+     */
+    private void resetSearchView() {
+        if (null != mSearchView) {
+            mSearchView.setQuery(null, true);
+        }
+        if (null != mSearchItem) {
+            MenuItemCompat.collapseActionView(mSearchItem);
+        }
+
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -199,7 +266,6 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
                         public void onResourceReady(GlideDrawable resource,
                                                     GlideAnimation<? super GlideDrawable> animation) {
                             super.onResourceReady(resource, animation);
-                            // TODO: EspressoIdlingResource.decrement(); // App is idle.
                         }
                     });
         }

@@ -13,7 +13,7 @@ public interface ArtistsRepository {
     /**
      * Defines actions performed when data loaded.
      */
-    interface LoadArtistCallback {
+    interface LoadArtistsCallback {
         /**
          * Called when artists are loaded.
          *
@@ -27,15 +27,31 @@ public interface ArtistsRepository {
      *
      * @param callback on loaded artists callback.
      */
-    void getArtists(@NonNull LoadArtistCallback callback);
+    void getArtists(@NonNull LoadArtistsCallback callback);
 
     /**
      * Gets artist by id from repository.
      *
      * @param artistId artist id to load data for.
-     * @param callback callback, that handles when artist loaded.
+     * @param callback callback handling artist loaded.
      */
     void getArtist(@NonNull long artistId, @NonNull GetArtistCallback callback);
+
+    /**
+     * Finds artists by name.
+     *
+     * @param query    the query to retrieve artists.
+     * @param callback callback handling artists found.
+     */
+    void findArtistsByName(@NonNull String query, @NonNull LoadArtistsCallback callback);
+
+    /**
+     * Finds artists by genres.
+     *
+     * @param genres   genres that artists have.
+     * @param callback callback handling artists loading.
+     */
+    void findArtistsByGenres(@NonNull String[] genres, @NonNull LoadArtistsCallback callback);
 
     /**
      * Refreshes data.

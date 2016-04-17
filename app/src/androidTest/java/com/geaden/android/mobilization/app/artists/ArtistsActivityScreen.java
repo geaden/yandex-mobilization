@@ -24,6 +24,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -88,6 +90,15 @@ public class ArtistsActivityScreen {
 
         // Verify artist is displayed on a screen
         onView(ArtistsMatchers.withItemText("foo")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void searchArtists() {
+        onView(withId(R.id.menu_artists_search)).perform(click());
+        onView(withId(android.support.design.R.id.search_src_text)).perform(typeText("foo"));
+
+        // Check proper number of items loaded from repository.
+        onView(withId(R.id.artists_list)).check(ArtistsViewAssertions.hasItemsCount(1));
     }
 
     @After

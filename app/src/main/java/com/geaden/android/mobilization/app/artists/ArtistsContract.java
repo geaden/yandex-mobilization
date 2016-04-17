@@ -49,6 +49,20 @@ public interface ArtistsContract {
         void loadArtists(boolean forceUpdate);
 
         /**
+         * Loads artists by provided name.
+         *
+         * @param artistName name or part of the name of the artist.
+         */
+        void loadArtistsByName(@NonNull String artistName);
+
+        /**
+         * Loads artists by genres.
+         *
+         * @param genres array of genres that artists have.
+         */
+        void loadArtistsByGenre(@NonNull String[] genres);
+
+        /**
          * Opens artists details.
          *
          * @param requestedArtist instance of {@link Artist} to open details for.

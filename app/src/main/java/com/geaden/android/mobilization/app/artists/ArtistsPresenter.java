@@ -32,13 +32,31 @@ public class ArtistsPresenter implements ArtistsContract.UserActionsListener {
             mArtistsRepository.refreshData();
         }
 
-        mArtistsRepository.getArtists(new ArtistsRepository.LoadArtistCallback() {
+        mArtistsRepository.getArtists(new ArtistsRepository.LoadArtistsCallback() {
             @Override
             public void onArtistsLoaded(List<Artist> artists) {
                 mArtistsView.setProgressIndicator(false);
                 mArtistsView.showArtists(artists);
             }
         });
+    }
+
+    @Override
+    public void loadArtistsByName(@NonNull String artistName) {
+        mArtistsView.setProgressIndicator(true);
+
+        mArtistsRepository.findArtistsByName(artistName, new ArtistsRepository.LoadArtistsCallback() {
+            @Override
+            public void onArtistsLoaded(List<Artist> artists) {
+                mArtistsView.setProgressIndicator(false);
+                mArtistsView.showArtists(artists);
+            }
+        });
+    }
+
+    @Override
+    public void loadArtistsByGenre(@NonNull String[] genres) {
+        // TODO: Implement this.
     }
 
     @Override

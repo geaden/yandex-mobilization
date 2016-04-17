@@ -50,7 +50,7 @@ public class LoadArtistsAsyncTaskTest {
                 .setBody(getStringFromFile(InstrumentationRegistry.getContext(),
                         "mock_artists.json")));
 
-        new LoadArtistsAsyncTask(new ArtistsRepository.LoadArtistCallback() {
+        new LoadArtistsAsyncTask(new ArtistsRepository.LoadArtistsCallback() {
             @Override
             public void onArtistsLoaded(List<Artist> artists) {
                 // Do nothing...

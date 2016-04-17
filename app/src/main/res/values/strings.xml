@@ -19,4 +19,8 @@
     <string name="artist_details_albums_tracks"><xliff:g name="albums">%1$d</xliff:g> albums • <xliff:g name="tracks">%2$d</xliff:g> tracks</string>
     <string name="transition_cover">transition_cover</string>
     <string name="missing_artist">Artist not found :(</string>
+
+    <!-- Search artists -->
+    <string name="artists_search_title">Search artists</string>
+    <string name="artists_search_hint">Search artists…</string>
 </resources>

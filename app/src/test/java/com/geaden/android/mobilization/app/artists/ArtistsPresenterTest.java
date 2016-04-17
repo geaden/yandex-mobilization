@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -28,14 +29,16 @@ public class ArtistsPresenterTest {
     @Mock
     private android.view.View mCoverView;
 
-    private static List<Artist> ARTISTS = Lists.newArrayList(new Artist(1L, "foo", "bar"),
+    private static final List<Artist> ARTISTS = Lists.newArrayList(new Artist(1L, "foo", "bar"),
             new Artist(2L, "fuz", "buz"));
+
+    private static final List<Artist> FOUND_ARTISTS = Lists.newArrayList(new Artist(3L, "buz", "boo"));
 
     /**
      * {@link ArgumentCaptor} to capture data passed to callback.
      */
     @Captor
-    private ArgumentCaptor<ArtistsRepository.LoadArtistCallback> mLoadArtistsCallbackCaptor;
+    private ArgumentCaptor<ArtistsRepository.LoadArtistsCallback> mLoadArtistsCallbackCaptor;
 
     @Mock
     private ArtistsContract.View mArtistsView;
@@ -57,7 +60,7 @@ public class ArtistsPresenterTest {
 
         verify(mArtistsRepository).refreshData();
 
-        // Check that we are showing progress indicator
+        // Check that we are showing progress indicator.
         verify(mArtistsView).setProgressIndicator(true);
 
         // Add stub data to callback.
@@ -67,6 +70,23 @@ public class ArtistsPresenterTest {
         // Then progress indicator is hidden and artists are shown in UI
         verify(mArtistsView).setProgressIndicator(false);
         verify(mArtistsView).showArtists(ARTISTS);
+    }
+
+    @Test
+    public void findArtistsByNameAndLoadIntoView() {
+        // Find artists by name.
+        mArtistsPresenter.loadArtistsByName("buz");
+
+        // Check that we are showing progress indicator.
+        verify(mArtistsView).setProgressIndicator(true);
+
+        // Add stub to callback on find artists.
+        verify(mArtistsRepository).findArtistsByName(eq("buz"), mLoadArtistsCallbackCaptor.capture());
+        mLoadArtistsCallbackCaptor.getValue().onArtistsLoaded(FOUND_ARTISTS);
+
+        // The progress indicator is hidden and found artists artists are shown in UI.
+        verify(mArtistsView).setProgressIndicator(false);
+        verify(mArtistsView).showArtists(FOUND_ARTISTS);
     }
 
     @Test

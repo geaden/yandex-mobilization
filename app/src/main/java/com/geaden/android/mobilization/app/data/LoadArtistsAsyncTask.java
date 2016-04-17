@@ -32,7 +32,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 public class LoadArtistsAsyncTask extends AsyncTask<Context, Void, List<Artist>> {
     private static final String TAG = LoadArtistsAsyncTask.class.getSimpleName();
-    private final ArtistsRepository.LoadArtistCallback mCallback;
+    private final ArtistsRepository.LoadArtistsCallback mCallback;
     private Context mContext;
     private Gson gson;
 
@@ -40,7 +40,7 @@ public class LoadArtistsAsyncTask extends AsyncTask<Context, Void, List<Artist>>
     private static final String CONTENT_TYPE_LABEL = "Content-Type";
     private static final String CONTENT_TYPE_VALUE_JSON = "application/json; charset=utf-8";
 
-    public LoadArtistsAsyncTask(ArtistsRepository.LoadArtistCallback callback) {
+    public LoadArtistsAsyncTask(ArtistsRepository.LoadArtistsCallback callback) {
         mCallback = callback;
     }
 

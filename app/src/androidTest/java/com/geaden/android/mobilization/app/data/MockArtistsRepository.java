@@ -2,6 +2,7 @@ package com.geaden.android.mobilization.app.data;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.test.espresso.core.deps.guava.collect.Lists;
 import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v4.util.ArrayMap;
 
@@ -42,7 +43,7 @@ public class MockArtistsRepository implements ArtistsRepository {
 
 
     @Override
-    public void getArtists(@NonNull final LoadArtistCallback callback) {
+    public void getArtists(@NonNull final LoadArtistsCallback callback) {
         mCountingIdlingResource.increment();
         // Simulate network by delaying the execution.
         Handler handler = new Handler();
@@ -74,6 +75,31 @@ public class MockArtistsRepository implements ArtistsRepository {
 
     @Override
     public void refreshData() {
+
+    }
+
+    @Override
+    public void findArtistsByName(@NonNull final String query, @NonNull final LoadArtistsCallback callback) {
+        mCountingIdlingResource.increment();
+        // Simulate network by delaying the execution.
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mCountingIdlingResource.decrement();
+                List<Artist> foundArtists = Lists.newArrayList();
+                for (Artist artist : ARTISTS_DATA.values()) {
+                    if (artist.getName().toLowerCase().contains(query.toLowerCase())) {
+                        foundArtists.add(artist);
+                    }
+                }
+                callback.onArtistsLoaded(foundArtists);
+            }
+        }, 1000);
+    }
+
+    @Override
+    public void findArtistsByGenres(@NonNull String[] genres, @NonNull LoadArtistsCallback callback) {
 
     }
 }
