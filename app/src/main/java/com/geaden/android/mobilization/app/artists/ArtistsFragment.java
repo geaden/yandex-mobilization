@@ -2,13 +2,17 @@ package com.geaden.android.mobilization.app.artists;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -32,6 +36,7 @@ import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.artistdetail.ArtistDetailActivity;
 import com.geaden.android.mobilization.app.data.Artist;
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
+import com.geaden.android.mobilization.app.util.Utility;
 import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
@@ -49,7 +54,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Gennady Denisov
  */
-public class ArtistsFragment extends Fragment implements ArtistsContract.View {
+public class ArtistsFragment extends Fragment implements ArtistsContract.View,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Inject
     ArtistsRepository mArtistsRepository;
@@ -68,6 +74,10 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
     private ArtistsAdapter mArtistsAdapter;
     private SearchView mSearchView;
     private MenuItem mSearchItem;
+
+    // Order values
+    private static final int TRACKS = 0;
+    private static final int ALBUMS = 1;
 
 
     public ArtistsFragment() {
@@ -118,6 +128,72 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_artists_order:
+                showSelectOrderDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Helper method to show selection order dialog.
+     */
+    private void showSelectOrderDialog() {
+        // Prepare sort order dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Get currently selected sort order
+        String currentOrder = Utility.getPreferredOrder(getActivity());
+        int checkedItem = TRACKS;
+        if (currentOrder.equals(getString(R.string.pref_order_by_albums))) {
+            checkedItem = ALBUMS;
+        }
+        builder.setTitle(R.string.artists_order_selection_title)
+                // Specify the list array, the items to be selected by default (null for none),
+                // and the listener through which to receive callbacks when items are selected
+                .setSingleChoiceItems(R.array.order_by, checkedItem,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case TRACKS:
+                                        Utility.setOrder(getActivity(),
+                                                getString(R.string.pref_order_by_tracks));
+                                        break;
+                                    case ALBUMS:
+                                        Utility.setOrder(getActivity(),
+                                                getString(R.string.pref_order_by_albums));
+                                        break;
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+        AlertDialog dialog = builder.create();
+        // Display the dialog
+        dialog.show();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_key_load_state))) {
+            updateEmptyView();
+        } else if (key.equals(getString(R.string.pref_key_order_value))) {
+            // Reload artists with new order...
+            mActionsListener.loadArtists(false);
+        }
+    }
+
+    /**
+     * Helper method that updates empty view.
+     */
+    private void updateEmptyView() {
+        // TODO: Implement this...
+
+    }
+
     public static ArtistsFragment newInstance() {
         return new ArtistsFragment();
     }
@@ -149,7 +225,6 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
         if (null != mSearchItem) {
             MenuItemCompat.collapseActionView(mSearchItem);
         }
-
     }
 
     @Override
@@ -188,10 +263,19 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View {
 
     @Override
     public void onResume() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.registerOnSharedPreferenceChangeListener(this);
         super.onResume();
         // Re-set adapter's context.
         mArtistsAdapter.setContext(getActivity());
         mActionsListener.loadArtists(false);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override

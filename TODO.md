@@ -8,7 +8,7 @@
 - [ ] Custom view for top aligned cover.
 - [ ] Change title when drawer is toggled.
 - [x] Capitalize artist description.
-- [ ] Search by artist
+- [x] Search artist by name.
 - [ ] Filter by genre
-- [ ] Order by tracks or albums
+- [x] Order by tracks or albums.
 - [ ] Tablet layout

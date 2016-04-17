@@ -3,11 +3,14 @@ package com.geaden.android.mobilization.app.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.models.ArtistModel;
 import com.geaden.android.mobilization.app.models.ArtistModel_Table;
+import com.geaden.android.mobilization.app.util.Utility;
 import com.google.common.collect.Lists;
 import com.raizlabs.android.dbflow.runtime.transaction.TransactionListenerAdapter;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 
 import java.util.List;
 
@@ -37,24 +40,23 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
 
         SQLite.select()
                 .from(ArtistModel.class)
-                // TODO: Order by values in settings.
-                .orderBy(ArtistModel_Table.created_at, true)
+                .orderBy(getOrder(), false)
                 .async()
                 .queryList(
-                new TransactionListenerAdapter<List<ArtistModel>>() {
-                    @Override
-                    public void onResultReceived(List<ArtistModel> models) {
-                        super.onResultReceived(models);
-                        if (models.size() > 0) {
-                            for (ArtistModel model : models) {
-                                artists.add(model.toArtist());
+                        new TransactionListenerAdapter<List<ArtistModel>>() {
+                            @Override
+                            public void onResultReceived(List<ArtistModel> models) {
+                                super.onResultReceived(models);
+                                if (models.size() > 0) {
+                                    for (ArtistModel model : models) {
+                                        artists.add(model.toArtist());
+                                    }
+                                    callback.onArtistsLoaded(artists);
+                                } else {
+                                    new LoadArtistsAsyncTask(callback).execute(mContext);
+                                }
                             }
-                            callback.onArtistsLoaded(artists);
-                        } else {
-                            new LoadArtistsAsyncTask(callback).execute(mContext);
-                        }
-                    }
-                });
+                        });
     }
 
 
@@ -90,20 +92,33 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
         SQLite.select()
                 .from(ArtistModel.class)
                 .where(ArtistModel_Table.name.like('%' + query.toLowerCase() + '%'))
-                // TODO: Order by values in settings.
-                .orderBy(ArtistModel_Table.created_at, true)
+                .orderBy(getOrder(), false)
                 .async()
                 .queryList(new TransactionListenerAdapter<List<ArtistModel>>() {
-            @Override
-            public void onResultReceived(List<ArtistModel> models) {
-                super.onResultReceived(models);
-                List<Artist> artists = Lists.newArrayList();
-                for (ArtistModel model : models) {
-                    artists.add(model.toArtist());
-                }
-                callback.onArtistsLoaded(artists);
-            }
-        });
+                    @Override
+                    public void onResultReceived(List<ArtistModel> models) {
+                        super.onResultReceived(models);
+                        List<Artist> artists = Lists.newArrayList();
+                        for (ArtistModel model : models) {
+                            artists.add(model.toArtist());
+                        }
+                        callback.onArtistsLoaded(artists);
+                    }
+                });
+    }
+
+    /**
+     * Gets property to order artists by.
+     *
+     * @return order property.
+     */
+    private IProperty getOrder() {
+        String currentOrder = Utility.getPreferredOrder(mContext);
+        if (currentOrder.equals(mContext.getString(R.string.pref_order_by_tracks))) {
+            return ArtistModel_Table.tracks;
+        } else {
+            return ArtistModel_Table.albums;
+        }
     }
 
     @Override
