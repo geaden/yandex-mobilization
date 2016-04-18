@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the implementation of {@link ArtistsPresenter}.
@@ -60,6 +61,8 @@ public class ArtistsPresenterTest {
 
     @Test
     public void loadArtistsFromRepositoryAndLoadIntoView() {
+        when(mArtistsView.getFilteredGenres()).thenReturn(new String[0]);
+
         // Request artists.
         mArtistsPresenter.loadArtists(true);
 
@@ -75,6 +78,14 @@ public class ArtistsPresenterTest {
         // Then progress indicator is hidden and artists are shown in UI
         verify(mArtistsView).setProgressIndicator(false);
         verify(mArtistsView).showArtists(ARTISTS);
+    }
+
+    @Test
+    public void restFilter() {
+        when(mArtistsView.getFilteredGenres()).thenReturn(new String[0]);
+        mArtistsPresenter.resetFilter();
+        verify(mArtistsView).setFilteredGenres(new String[0]);
+        verify(mArtistsView).hideFilteredIcon();
     }
 
     @Test
@@ -96,7 +107,7 @@ public class ArtistsPresenterTest {
 
     @Test
     public void findArtistsByGenresLoadIntoView() {
-        mArtistsPresenter.loadArtistsByGenres(GENRES, false);
+        mArtistsPresenter.loadArtistsByGenres(GENRES);
 
         // Check that we are showing progress indicator.
         verify(mArtistsView).setProgressIndicator(true);
@@ -108,6 +119,8 @@ public class ArtistsPresenterTest {
         // The progress indicator is hidden and found artists artists are shown in UI.
         verify(mArtistsView).setProgressIndicator(false);
         verify(mArtistsView).showArtists(FOUND_ARTISTS);
+
+        verify(mArtistsView).showFilteredIcon();
     }
 
     @Test

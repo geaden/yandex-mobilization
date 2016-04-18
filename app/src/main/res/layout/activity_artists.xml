@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".artists.ArtistsActivity"
-    tools:openDrawer="start">
+    tools:openDrawer="none">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,19 @@
             android:elevation="@dimen/app_bar_elevation"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/Toolbar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <ImageButton
+                android:id="@+id/artists_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_margin="@dimen/filter_icon_margin"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_filter"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/coordinatorLayout"

@@ -4,6 +4,9 @@ import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.geaden.android.mobilization.app.data.Artist;
+import com.geaden.android.mobilization.app.util.TestDbUtil;
+import com.raizlabs.android.dbflow.runtime.transaction.process.InsertModelTransaction;
+import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.junit.Before;
@@ -15,7 +18,7 @@ import java.util.List;
 import static com.geaden.android.mobilization.app.models.ArtistModelTest.TEST_DESCRIPTION;
 import static com.geaden.android.mobilization.app.models.ArtistModelTest.TEST_GENRES;
 import static com.geaden.android.mobilization.app.models.ArtistModelTest.TEST_NAME;
-import static com.geaden.android.mobilization.app.models.ArtistModelTest.saveArtist;
+import static com.geaden.android.mobilization.app.models.ArtistModelTest.createArtist;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -28,36 +31,76 @@ import static org.junit.Assert.assertEquals;
 public class GenreModelTest {
 
     @Before
-    public void cleanupDb() {
-        SQLite.delete(ArtistModel.class).query();
-        SQLite.delete(GenreModel.class).query();
-        SQLite.delete(GenreModel_ArtistModel.class).query();
+    public void setUp() {
+        TestDbUtil.cleanupDb();
     }
 
     @Test
     public void queryArtistsByGenres() {
-        Artist newArtist = saveArtist(TEST_NAME, TEST_DESCRIPTION, TEST_GENRES);
+        Artist newArtist = createArtist(TEST_NAME, TEST_DESCRIPTION, TEST_GENRES);
 
-        newArtist.saveGenres(false);
+        List<GenreModel_ArtistModel> genreModelArtistModels = newArtist.toModel()
+                .getGenreModelArtistModelList(newArtist.getGenres());
+
+        new InsertModelTransaction<>(ProcessModelInfo.withModels(genreModelArtistModels))
+                .onExecute();
 
         List<GenreModel_ArtistModel> queried = SQLite.select()
                 .distinct().from(GenreModel_ArtistModel.class)
                 .queryList();
 
-        assertEquals(2, queried.size());
+        assertEquals(TEST_GENRES.length, queried.size());
 
         List<ArtistModel> artists = getArtistByGenres("foo", "bar");
 
         assertEquals(1, artists.size());
 
         // Add new artists wit new genre
-        Artist anotherArtist = saveArtist("zoo", "xoo", new String[]{"metal"});
+        Artist anotherArtist = createArtist("zoo", "xoo", new String[]{"metal"});
+        genreModelArtistModels = anotherArtist.toModel()
+                .getGenreModelArtistModelList(anotherArtist.getGenres());
 
-        anotherArtist.saveGenres(false);
+        new InsertModelTransaction<>(ProcessModelInfo.withModels(genreModelArtistModels))
+                .onExecute();
 
         artists = getArtistByGenres("foo", "metal");
 
         assertEquals(2, artists.size());
+    }
+
+    @Test
+    public void bulkInsertRelatedModels() {
+        Artist newArtist = createArtist(TEST_NAME, TEST_DESCRIPTION, TEST_GENRES);
+
+        List<GenreModel_ArtistModel> genresArtists = newArtist.toModel().getGenreModelArtistModelList(
+                newArtist.getGenres());
+
+        new InsertModelTransaction<>(ProcessModelInfo.withModels(genresArtists)).onExecute();
+
+        // Check that all related models are properly saved.
+        List<ArtistModel> artist = SQLite.select().from(ArtistModel.class).queryList();
+        assertEquals(1, artist.size());
+        List<GenreModel> genres = SQLite.select().from(GenreModel.class).queryList();
+        assertEquals(TEST_GENRES.length, genres.size());
+        List<GenreModel_ArtistModel> genresArtistsList = SQLite.select().distinct()
+                .from(GenreModel_ArtistModel.class).queryList();
+        assertEquals(TEST_GENRES.length, genresArtistsList.size());
+
+        // Check that adding new artist with already inserted genre
+        // doesn't insert new genre, but inserts new ArtistModel and GenreModel_ArtistModel.
+        Artist anotherArtist = createArtist("zoo", "xoo", new String[]{"foo"});
+        genresArtists = anotherArtist.toModel().getGenreModelArtistModelList(anotherArtist
+                .getGenres());
+
+        new InsertModelTransaction<>(ProcessModelInfo.withModels(genresArtists)).onExecute();
+
+        assertEquals(TEST_GENRES.length, SQLite.select().from(GenreModel.class)
+                .queryList().size());
+        assertEquals(2, SQLite.select().from(ArtistModel.class)
+                .queryList().size());
+        assertEquals(3, SQLite.select().from(GenreModel_ArtistModel.class)
+                .queryList().size());
+
     }
 
     /**

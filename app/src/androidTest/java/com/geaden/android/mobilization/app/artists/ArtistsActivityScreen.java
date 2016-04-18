@@ -37,6 +37,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -81,10 +82,10 @@ public class ArtistsActivityScreen {
 
     @Before
     public void registerIdlingResource() {
-        Espresso.registerIdlingResources(mIdlingResource);
         // Set default order to tracks.
-        Utility.setOrder(InstrumentationRegistry.getTargetContext(),
+        Utility.setPreferredOrder(InstrumentationRegistry.getTargetContext(),
                 InstrumentationRegistry.getTargetContext().getString(R.string.pref_order_by_tracks));
+        Espresso.registerIdlingResources(mIdlingResource);
     }
 
     @Test
@@ -103,6 +104,7 @@ public class ArtistsActivityScreen {
     @Test
     public void searchArtistsByName() {
         onView(withId(R.id.menu_artists_search)).perform(click());
+
         onView(withId(android.support.design.R.id.search_src_text)).perform(typeText("foo"));
 
         // Check proper number of items loaded from repository.
@@ -137,7 +139,26 @@ public class ArtistsActivityScreen {
         onView(withText(R.string.artists_genres_selection_title)).check(matches(isDisplayed()));
         onView(withText("foo")).perform(click());
         onView(withText("bar")).perform(click());
-        // TODO: Check that items are stored in preferences.
+        // Apply genres filter
+        onView(withText(R.string.filter)).perform(click());
+        // Snack Bar should be shown.
+        onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("Filtered by foo, bar")))
+                .check(matches(isDisplayed()));
+        // Genres are stored in preferences.
+        String[] filterGenres = Utility.getFilterGenres(InstrumentationRegistry.getTargetContext());
+        assertThat(filterGenres, is(new String[]{"foo", "bar"}));
+
+        // Check that filtered is shown
+        onView(withId(R.id.artists_filter)).check(matches(isDisplayed()));
+
+        // Reset filter
+        onView(withId(R.id.artists_filter)).perform(click());
+
+        // Check that filter is reset
+        // Genres are stored in preferences.
+        filterGenres = Utility.getFilterGenres(InstrumentationRegistry.getTargetContext());
+        assertThat(filterGenres, is(new String[0]));
+
     }
 
     @After
@@ -146,5 +167,8 @@ public class ArtistsActivityScreen {
             Espresso.unregisterIdlingResources(mIdlingResource);
             mIdlingResource = null;
         }
+        // Set empty genres filter
+        Utility.setFilterGenres(InstrumentationRegistry.getTargetContext(),
+                new String[0]);
     }
 }

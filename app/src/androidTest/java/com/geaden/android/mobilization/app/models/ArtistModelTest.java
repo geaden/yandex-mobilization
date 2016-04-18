@@ -47,9 +47,7 @@ public class ArtistModelTest {
 
     @Test
     public void loadArtistsFromDb() {
-        Artist newArtist = saveArtist(TEST_NAME, TEST_DESCRIPTION, TEST_GENRES);
-
-        newArtist.toModel().save();
+        saveArtist(TEST_NAME, TEST_DESCRIPTION, TEST_GENRES);
 
         List<ArtistModel> models = SQLite.select().from(ArtistModel.class).queryList();
         assertTrue(models.size() == 1);
@@ -72,20 +70,32 @@ public class ArtistModelTest {
     /**
      * Helper method, that saves artist to database.
      *
-     * @param name        artist name.
-     * @param description artist description.
-     * @param genres      genres.
-     * @return save artist.
+     * @param name        artist's name.
+     * @param description artist's description.
+     * @param genres      artist's genres.
+     * @return saved artist instance.
      */
     public static Artist saveArtist(String name, String description, String[] genres) {
-        // Add new artists wit new genre
+        Artist newArtist = createArtist(name, description, genres);
+        newArtist.toModel().save();
+        return newArtist;
+    }
+
+    /**
+     * Creates new artist without saving to database.
+     *
+     * @param name        artist's name.
+     * @param description artist's description.
+     * @param genres      artist's genres.
+     * @return new artists instance.
+     */
+    public static Artist createArtist(String name, String description, String[] genres) {
         Artist newArtist = new Artist(atomicId.getAndDecrement(), name, description);
         newArtist.setGenres(genres);
         newArtist.setTracks(FORTY_TWO);
         newArtist.setAlbums(FORTY_TWO);
         newArtist.setLink("https://ya.ru");
         newArtist.setCover(new Cover(SMALL, BIG));
-        newArtist.toModel().save();
         return newArtist;
     }
 }

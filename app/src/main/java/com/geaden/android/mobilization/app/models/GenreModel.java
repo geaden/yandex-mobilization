@@ -16,7 +16,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
  *
  * @author Gennady Denisov
  */
-@ManyToMany(referencedTable = ArtistModel.class)
+@ManyToMany(referencedTable = ArtistModel.class, saveForeignKeyModels = true)
 @Table(database = ArtistsDatabase.class)
 public class GenreModel extends BaseModel {
     @PrimaryKey

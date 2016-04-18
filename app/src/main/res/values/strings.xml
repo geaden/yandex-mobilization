@@ -43,4 +43,8 @@
     <!-- Genres -->
     <string name="artists_menu_title_genres">Genres…</string>
     <string name="artists_genres_selection_title">Select genres</string>
+    <string name="pref_key_filter_genres">pref_filter_genres</string>
+    <string name="filter">Filter</string>
+    <string name="filtered_by_genres">Filtered by <xliff:g name="genres">%1$s</xliff:g></string>
+    <string name="reset">Reset</string>
 </resources>

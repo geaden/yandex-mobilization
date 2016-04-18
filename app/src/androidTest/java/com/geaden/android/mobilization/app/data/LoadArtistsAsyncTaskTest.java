@@ -9,6 +9,8 @@ import com.geaden.android.mobilization.app.models.ArtistModel;
 import com.geaden.android.mobilization.app.models.GenreModel;
 import com.geaden.android.mobilization.app.models.GenreModel_ArtistModel;
 import com.geaden.android.mobilization.app.util.Constants;
+import com.geaden.android.mobilization.app.util.TestDbUtil;
+import com.geaden.android.mobilization.app.util.Utility;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.junit.After;
@@ -38,9 +40,9 @@ public class LoadArtistsAsyncTaskTest {
 
     @Before
     public void mockServer() throws Exception {
-        SQLite.delete().from(ArtistModel.class).query();
-        SQLite.delete().from(GenreModel.class).query();
-        SQLite.delete().from(GenreModel_ArtistModel.class).query();
+        TestDbUtil.cleanupDb();
+        // Reset filter genres.
+        Utility.setFilterGenres(InstrumentationRegistry.getTargetContext(), new String[0]);
         mServer = new MockWebServer();
         mServer.start();
         Constants.ARTISTS_URL = mServer.url("/").toString();
@@ -65,9 +67,12 @@ public class LoadArtistsAsyncTaskTest {
         List<ArtistModel> models = SQLite.select().from(ArtistModel.class).queryList();
         assertEquals(3, models.size());
 
-        List<GenreModel> genres = SQLite.select().distinct()
-                .from(GenreModel.class).queryList();
+        List<GenreModel> genres = SQLite.select().from(GenreModel.class).queryList();
         assertEquals(5, genres.size());
+
+        List<GenreModel_ArtistModel> genresArtists = SQLite.select()
+                .from(GenreModel_ArtistModel.class).queryList();
+        assertEquals(9, genresArtists.size());
     }
 
     /**

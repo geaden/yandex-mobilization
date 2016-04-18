@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.models.ArtistModel;
+import com.geaden.android.mobilization.app.models.GenreModel_ArtistModel;
 import com.geaden.android.mobilization.app.util.Constants;
 import com.geaden.android.mobilization.app.util.Utility;
 import com.google.common.collect.Lists;
@@ -17,7 +18,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.raizlabs.android.dbflow.runtime.transaction.process.InsertModelTransaction;
 import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.io.IOException;
 import java.util.List;
@@ -98,20 +98,18 @@ public class LoadArtistsAsyncTask extends AsyncTask<Context, Void, List<Artist>>
 
             Artist[] artistsArray = gson.fromJson(response.body().charStream(), Artist[].class);
 
-            List<ArtistModel> models = Lists.newArrayList();
+            List<GenreModel_ArtistModel> genreModelArtistModels = Lists.newArrayList();
 
-            // Save genres to database.
             for (Artist artist : artistsArray) {
-                artist.saveGenres(true);
-                models.add(artist.toModel());
+                ArtistModel artistModel = artist.toModel();
+                genreModelArtistModels.addAll(artistModel.getGenreModelArtistModelList(artist.getGenres()));
             }
 
             // Save retrieved artists to database synchronously.
-            new InsertModelTransaction<>(ProcessModelInfo.withModels(models)).onExecute();
+            new InsertModelTransaction<>(ProcessModelInfo.withModels(genreModelArtistModels)).onExecute();
 
             // Retrieve list of artists with preferred order.
-            models = SQLite.select()
-                    .from(ArtistModel.class)
+            List<ArtistModel> models = ArtistsRepositoryImpl.getWhereClause(mContext)
                     .orderBy(ArtistsRepositoryImpl.getOrder(mContext), false)
                     .queryList();
 

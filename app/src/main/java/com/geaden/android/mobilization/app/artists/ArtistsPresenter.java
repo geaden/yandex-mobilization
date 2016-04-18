@@ -32,6 +32,13 @@ public class ArtistsPresenter implements ArtistsContract.UserActionsListener {
             mArtistsRepository.refreshData();
         }
 
+        String[] filteredGenres = mArtistsView.getFilteredGenres();
+
+        if (filteredGenres.length > 0) {
+            loadArtistsByGenres(filteredGenres);
+            return;
+        }
+
         mArtistsRepository.getArtists(new ArtistsRepository.LoadArtistsCallback() {
             @Override
             public void onArtistsLoaded(List<Artist> artists) {
@@ -55,7 +62,7 @@ public class ArtistsPresenter implements ArtistsContract.UserActionsListener {
     }
 
     @Override
-    public void loadArtistsByGenres(@NonNull String[] genres, boolean allGenres) {
+    public void loadArtistsByGenres(@NonNull String[] genres) {
         mArtistsView.setProgressIndicator(true);
 
         ArtistsRepository.LoadArtistsCallback callback = new ArtistsRepository.LoadArtistsCallback() {
@@ -66,11 +73,19 @@ public class ArtistsPresenter implements ArtistsContract.UserActionsListener {
             }
         };
 
-        if (allGenres) {
+        // None of the genres are selected
+        // just query all artists.
+        if (genres.length == 0) {
             mArtistsRepository.getArtists(callback);
+            mArtistsView.hideFilteredIcon();
             return;
         }
+
+        // Find artists by selected genres.
         mArtistsRepository.findArtistsByGenres(genres, callback);
+
+        // Show icon, that the result if filtered.
+        mArtistsView.showFilteredIcon();
     }
 
     @Override
@@ -87,7 +102,13 @@ public class ArtistsPresenter implements ArtistsContract.UserActionsListener {
                 mArtistsView.showSelectGenresDialog(genres);
             }
         });
+    }
 
+    @Override
+    public void resetFilter() {
+        mArtistsView.setFilteredGenres(new String[0]);
+        mArtistsView.hideFilteredIcon();
+        loadArtists(false);
     }
 
     @Override

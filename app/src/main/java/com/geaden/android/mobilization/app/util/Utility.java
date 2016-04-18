@@ -7,8 +7,12 @@ import android.preference.PreferenceManager;
 import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.data.LoadingStatus;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- * {}.
+ * Utility methods.
  *
  * @author Gennady Denisov
  */
@@ -20,13 +24,13 @@ public final class Utility {
     /**
      * Gets preferred sort order from user settings.
      *
-     * @param c the context to get SharedPreferences from.
+     * @param ctx the context to get SharedPreferences from.
      * @return the preferred sort order.
      */
-    static public String getPreferredOrder(Context c) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-        return sp.getString(c.getString(R.string.pref_key_order_value),
-                c.getString(R.string.pref_default_order));
+    static public String getPreferredOrder(Context ctx) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return sp.getString(ctx.getString(R.string.pref_key_order_value),
+                ctx.getString(R.string.pref_default_order));
     }
 
     /**
@@ -35,10 +39,39 @@ public final class Utility {
      * @param ctx   the Context to get SharedPreferences.
      * @param order sorting order to be set.
      */
-    public static void setOrder(Context ctx, String order) {
+    public static void setPreferredOrder(Context ctx, String order) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
         SharedPreferences.Editor ed = sp.edit();
         ed.putString(ctx.getString(R.string.pref_key_order_value), order);
+        ed.apply();
+    }
+
+    /**
+     * Gets filtered genres.
+     *
+     * @param ctx the Context to get SharedPreferences.
+     * @return array of genres.
+     */
+    public static String[] getFilterGenres(Context ctx) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        Set<String> genresSet = sp.getStringSet(ctx.getString(R.string.pref_key_filter_genres), null);
+        if (genresSet == null) {
+            return new String[0];
+        }
+        return genresSet.toArray(new String[genresSet.size()]);
+    }
+
+    /**
+     * Sets filtered genres.
+     *
+     * @param ctx    the Context to get SharedPreferences.
+     * @param genres genres to set.
+     */
+    public static void setFilterGenres(Context ctx, String[] genres) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putStringSet(ctx.getString(R.string.pref_key_filter_genres),
+                new HashSet<String>(Arrays.asList(genres)));
         ed.apply();
     }
 

@@ -52,6 +52,30 @@ public interface ArtistsContract {
          * Method to update empty view when needed.
          */
         void updateEmptyView();
+
+        /**
+         * Gets array of genres filtered by user.
+         *
+         * @return array of filtered genres.
+         */
+        String[] getFilteredGenres();
+
+        /**
+         * Sets array of genres as filtered.
+         *
+         * @param genres filtered genres.
+         */
+        void setFilteredGenres(String[] genres);
+
+        /**
+         * Shows icon, indicating result is filtered.
+         */
+        void showFilteredIcon();
+
+        /**
+         * Hides icon, that the result if filtered.
+         */
+        void hideFilteredIcon();
     }
 
     /**
@@ -75,10 +99,9 @@ public interface ArtistsContract {
         /**
          * Loads artists by genres.
          *
-         * @param genres    array of genres that artists have.
-         * @param allGenres indicates if all the genres were selected to show.
+         * @param genres array of selected genres that artists have.
          */
-        void loadArtistsByGenres(@NonNull String[] genres, boolean allGenres);
+        void loadArtistsByGenres(@NonNull String[] genres);
 
         /**
          * Loads list of genres to select.
@@ -89,6 +112,11 @@ public interface ArtistsContract {
          * Allows user to select order.
          */
         void selectOrder();
+
+        /**
+         * Resets genres filter.
+         */
+        void resetFilter();
 
         /**
          * Opens artists details.

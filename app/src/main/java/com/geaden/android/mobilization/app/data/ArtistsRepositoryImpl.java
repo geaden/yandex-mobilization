@@ -7,10 +7,13 @@ import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.models.ArtistModel;
 import com.geaden.android.mobilization.app.models.ArtistModel_Table;
 import com.geaden.android.mobilization.app.models.GenreModel;
+import com.geaden.android.mobilization.app.models.GenreModel_ArtistModel;
+import com.geaden.android.mobilization.app.models.GenreModel_Table;
 import com.geaden.android.mobilization.app.util.Utility;
 import com.google.common.collect.Lists;
 import com.raizlabs.android.dbflow.runtime.transaction.TransactionListenerAdapter;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.Where;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 
 import java.util.List;
@@ -38,8 +41,7 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
 
         Utility.setLoadingStatus(mContext, LoadingStatus.LOADING);
 
-        SQLite.select()
-                .from(ArtistModel.class)
+        getWhereClause(mContext)
                 .orderBy(getOrder(mContext), false)
                 .async()
                 .queryList(
@@ -51,7 +53,7 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
                                     processArtistModels(models, callback);
                                     return;
                                 }
-                                // No entries in the database, call Yandex.
+                                // No entries in the database, call server.
                                 new LoadArtistsAsyncTask(callback).execute(mContext);
                             }
                         });
@@ -60,14 +62,16 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
 
     @Override
     public void refreshData() {
-        SQLite.delete(ArtistModel.class).async().execute();
-        SQLite.delete(GenreModel.class).async().execute();
+        SQLite.delete(GenreModel_ArtistModel.class).query();
+        SQLite.delete(ArtistModel.class).query();
+        SQLite.delete(GenreModel.class).query();
     }
 
     @Override
     public void getArtist(@NonNull long artistId, @NonNull final GetArtistCallback callback) {
         checkNotNull(artistId);
         checkNotNull(callback);
+
         SQLite.select()
                 .from(ArtistModel.class)
                 .where(ArtistModel_Table.id.eq(artistId))
@@ -84,6 +88,21 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
                 });
     }
 
+    /**
+     * Method to construct where clause if there are filtered genres.
+     *
+     * @param context the Context to get SharedPreferences from.
+     * @return where clause.
+     */
+    public static Where<ArtistModel> getWhereClause(Context context) {
+        // Get filtered genres
+        String[] filterGenres = Utility.getFilterGenres(context);
+        if (filterGenres.length > 0) {
+            return GenreModel.getArtistsByGenres(filterGenres);
+        }
+        return SQLite.select().from(ArtistModel.class).where();
+    }
+
     @Override
     public void findArtistsByName(@NonNull String query, @NonNull final LoadArtistsCallback callback) {
         checkNotNull(query);
@@ -91,9 +110,8 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
 
         Utility.setLoadingStatus(mContext, LoadingStatus.LOADING);
 
-        SQLite.select()
-                .from(ArtistModel.class)
-                .where(ArtistModel_Table.name.like('%' + query.toLowerCase() + '%'))
+        getWhereClause(mContext)
+                .and(ArtistModel_Table.name.like('%' + query.toLowerCase() + '%'))
                 .orderBy(getOrder(mContext), false)
                 .async()
                 .queryList(new TransactionListenerAdapter<List<ArtistModel>>() {
@@ -155,8 +173,9 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
     @Override
     public void getGenres(@NonNull final LoadGenresCallback callback) {
         checkNotNull(callback);
-        SQLite.select().distinct()
+        SQLite.select()
                 .from(GenreModel.class)
+                .orderBy(GenreModel_Table.name, true)
                 .async()
                 .queryList(new TransactionListenerAdapter<List<GenreModel>>() {
                     @Override

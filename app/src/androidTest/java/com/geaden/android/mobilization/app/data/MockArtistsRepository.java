@@ -112,7 +112,8 @@ public class MockArtistsRepository implements ArtistsRepository {
 
     @Override
     public void findArtistsByGenres(@NonNull String[] genres, @NonNull LoadArtistsCallback callback) {
-
+        List<Artist> artists = new ArrayList<>(ARTISTS_DATA.values());
+        callback.onArtistsLoaded(artists);
     }
 
     @Override

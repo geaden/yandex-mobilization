@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -38,11 +39,13 @@ import com.geaden.android.mobilization.app.artistdetail.ArtistDetailActivity;
 import com.geaden.android.mobilization.app.data.Artist;
 import com.geaden.android.mobilization.app.data.ArtistsRepository;
 import com.geaden.android.mobilization.app.data.LoadingStatus;
+import com.geaden.android.mobilization.app.util.Constants;
 import com.geaden.android.mobilization.app.util.Utility;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -152,13 +155,21 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
     @Override
     public void showSelectGenresDialog(final String[] genres) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        // TODO: Populate already selected genres.
-        boolean[] checked = new boolean[genres.length];
-        int i = 0;
-        for (String genre : genres) {
-            checked[i++] = true;
+        // Populate already filtered genres.
+        String[] filterGenres = Utility.getFilterGenres(getActivity());
+        boolean[] checked = null;
+        if (filterGenres.length > 0) {
+            checked = new boolean[genres.length];
+            int i = 0;
+            for (String genre : genres) {
+                if (Arrays.binarySearch(filterGenres, genre) > -1) {
+                    checked[i++] = true;
+                } else {
+                    checked[i++] = false;
+                }
+            }
         }
-        final List<String> selectedGenres = Lists.newArrayList();
+        final List<String> selectedGenres = Lists.newArrayList(filterGenres);
         builder.setTitle(R.string.artists_genres_selection_title)
                 .setMultiChoiceItems(genres,
                         checked,
@@ -173,18 +184,27 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
                                 }
                             }
                         }
-                ).setCancelable(false).setNeutralButton(android.R.string.ok,
+                ).setPositiveButton(R.string.filter,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "Selected genres " + selectedGenres);
-                        if (selectedGenres.size() == genres.length) {
-                            mActionsListener.loadArtistsByGenres(new String[0], true);
-                        } else {
-                            mActionsListener.loadArtistsByGenres(
-                                    selectedGenres.toArray(new String[selectedGenres.size()]), false);
-                        }
+                        Log.d(TAG, "Filter genres " + selectedGenres);
+                        String[] filterGenres = selectedGenres.toArray(new String[selectedGenres.size()]);
+                        setFilteredGenres(filterGenres);
+                        mActionsListener.loadArtistsByGenres(filterGenres);
                         dialog.dismiss();
+                        if (null != getView() && filterGenres.length > 0) {
+                            Snackbar.make(getView(), getString(R.string.filtered_by_genres,
+                                    Joiner.on(Constants.GENRES_SEPARATOR).join(filterGenres)),
+                                    Snackbar.LENGTH_LONG)
+                                    .setAction(R.string.reset, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            mActionsListener.resetFilter();
+                                        }
+                                    })
+                                    .show();
+                        }
                     }
                 });
         builder.show();
@@ -209,11 +229,11 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case TRACKS:
-                                        Utility.setOrder(getActivity(),
+                                        Utility.setPreferredOrder(getActivity(),
                                                 getString(R.string.pref_order_by_tracks));
                                         break;
                                     case ALBUMS:
-                                        Utility.setOrder(getActivity(),
+                                        Utility.setPreferredOrder(getActivity(),
                                                 getString(R.string.pref_order_by_albums));
                                         break;
                                 }
@@ -254,6 +274,36 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
             default:
                 throw new UnsupportedOperationException("Unknown loading state " + loadingStatus);
         }
+    }
+
+    @Override
+    public String[] getFilteredGenres() {
+        return Utility.getFilterGenres(getActivity());
+    }
+
+    private ArtistsActivity getActivityCast() {
+        return (ArtistsActivity) getActivity();
+    }
+
+    @Override
+    public void showFilteredIcon() {
+        getActivityCast().getArtistFilter().setVisibility(View.VISIBLE);
+        getActivityCast().getArtistFilter().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionsListener.resetFilter();
+            }
+        });
+    }
+
+    @Override
+    public void setFilteredGenres(String[] genres) {
+        Utility.setFilterGenres(getActivity(), genres);
+    }
+
+    @Override
+    public void hideFilteredIcon() {
+        getActivityCast().getArtistFilter().setVisibility(View.GONE);
     }
 
     @Override
@@ -324,7 +374,7 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sp.registerOnSharedPreferenceChangeListener(this);
         super.onResume();
-        // Re-set adapter's context.
+        // Reset adapter's context.
         mArtistsAdapter.setContext(getActivity());
         mActionsListener.loadArtists(false);
     }

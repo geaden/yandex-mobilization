@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 
 import com.geaden.android.mobilization.app.R;
 
@@ -30,6 +31,9 @@ public class ArtistsActivity extends AppCompatActivity {
 
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
+
+    @Bind(R.id.artists_filter)
+    ImageButton mArtistFilter;
 
     @Bind(R.id.nav_view)
     NavigationView mNavigationView;
@@ -75,9 +79,16 @@ public class ArtistsActivity extends AppCompatActivity {
                     return true;
                 }
             });
-
         }
+    }
 
+    /**
+     * Gets current view displaying filter icon.
+     *
+     * @return filter icon.
+     */
+    public ImageButton getArtistFilter() {
+        return mArtistFilter;
     }
 
     /**
