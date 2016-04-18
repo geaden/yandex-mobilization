@@ -1,6 +1,6 @@
 # Yandex Mobilization Sample App
 
-[![Build Status](https://travis-ci.org/geaden/yandex-mobilization.svg?branch=ci)](https://travis-ci.org/geaden/yandex-mobilization)
+[![Build Status](https://travis-ci.org/geaden/yandex-mobilization.svg?branch=ci)](https://travis-ci.org/geaden/yandex-mobilization) [![Coverage Status](https://coveralls.io/repos/github/geaden/yandex-mobilization/badge.svg?branch=ci)](https://coveralls.io/github/geaden/yandex-mobilization?branch=ci)
 
 A sample app for applying to [Yandex Mobilization](https://www.yandex.ru/mobilization/) as an Android Developer.
 
@@ -32,5 +32,6 @@ sqlite> .schema
  - [Building and Android Project in Travis](https://docs.travis-ci.com/user/languages/android)
  - [Retrofit 2 - Mocking HTTP Responses](http://riggaroo.co.za/retrofit-2-mocking-http-responses/)
  - [Android TDD Playground](https://github.com/pestrada/android-tdd-playground)
+ - [Android Dev Summit Architecture Demo](https://github.com/yigit/dev-summit-architecture-demo)
 
 Gennady Denisov, 2016.
