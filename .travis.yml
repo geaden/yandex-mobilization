@@ -12,7 +12,8 @@ env:
 
 android:
   components:
-    - 24.0.0-alpha5
+    - tools
+    - build-tools-24.0.0-alpha5
     - android-23
     - sys-img-armeabi-v7a-android-23
     - extra-android-m2repository

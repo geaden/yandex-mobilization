@@ -1,5 +1,7 @@
 # Yandex Mobilization Sample App
 
+[![Build Status](https://travis-ci.org/geaden/yandex-mobilization.svg?branch=ci)](https://travis-ci.org/geaden/yandex-mobilization)
+
 A sample app for applying to [Yandex Mobilization](https://www.yandex.ru/mobilization/) as an Android Developer.
 
 Inspired by:
