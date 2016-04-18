@@ -5,6 +5,9 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.geaden.android.mobilization.app.data.Artist;
 import com.geaden.android.mobilization.app.data.Cover;
+import com.geaden.android.mobilization.app.util.TestDbUtil;
+import com.raizlabs.android.dbflow.runtime.transaction.process.InsertModelTransaction;
+import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.junit.Before;
@@ -42,43 +45,34 @@ public class ArtistModelTest {
 
     @Before
     public void deleteDataFromDb() {
-        SQLite.delete(ArtistModel.class).query();
+        TestDbUtil.cleanupDb();
     }
 
     @Test
     public void loadArtistsFromDb() {
-        saveArtist(TEST_NAME, TEST_DESCRIPTION, TEST_GENRES);
+        Artist artist = createArtist(TEST_NAME, TEST_DESCRIPTION, TEST_GENRES);
+
+        List<GenreModel_ArtistModel> genreModelArtistModels = artist.toModel()
+                .getGenreModelArtistModelList(artist.getGenres());
+
+        // Save artist along with genres.
+        new InsertModelTransaction<>(ProcessModelInfo.withModels(genreModelArtistModels)).onExecute();
 
         List<ArtistModel> models = SQLite.select().from(ArtistModel.class).queryList();
         assertTrue(models.size() == 1);
 
         ArtistModel model = models.get(0);
 
-        Artist artist = model.toArtist();
+        Artist queriedArtist = model.toArtist();
 
-        assertEquals(Long.valueOf(1L), artist.getId());
-        assertEquals(TEST_NAME, artist.getName());
-        assertEquals(TEST_DESCRIPTION, artist.getDescription());
-        assertEquals(TEST_LINK, artist.getLink());
-        assertArrayEquals(TEST_GENRES, artist.getGenres());
-        assertEquals(FORTY_TWO, artist.getTracks());
-        assertEquals(FORTY_TWO, artist.getAlbums());
-        assertEquals(SMALL, artist.getCover().getSmall());
-        assertEquals(BIG, artist.getCover().getBig());
-    }
-
-    /**
-     * Helper method, that saves artist to database.
-     *
-     * @param name        artist's name.
-     * @param description artist's description.
-     * @param genres      artist's genres.
-     * @return saved artist instance.
-     */
-    public static Artist saveArtist(String name, String description, String[] genres) {
-        Artist newArtist = createArtist(name, description, genres);
-        newArtist.toModel().save();
-        return newArtist;
+        assertEquals(TEST_NAME, queriedArtist.getName());
+        assertEquals(TEST_DESCRIPTION, queriedArtist.getDescription());
+        assertEquals(TEST_LINK, queriedArtist.getLink());
+        assertArrayEquals(TEST_GENRES, queriedArtist.getGenres());
+        assertEquals(FORTY_TWO, queriedArtist.getTracks());
+        assertEquals(FORTY_TWO, queriedArtist.getAlbums());
+        assertEquals(SMALL, queriedArtist.getCover().getSmall());
+        assertEquals(BIG, queriedArtist.getCover().getBig());
     }
 
     /**

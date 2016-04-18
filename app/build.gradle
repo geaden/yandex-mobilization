@@ -112,9 +112,22 @@ at runtime. More info in this tools bug: (https://code.google.com/p/android/issu
 }
 
 // Copy res directory from unit-tests
-task copyResDirectoryToClasses(type: Copy) {
-    from "${projectDir}/src/test/res"
-    into "${buildDir}/intermediates/classes/test/debug"
+task copyResDirectoryToClasses << {
+    // Copy for debug
+    def resDir = "${projectDir}/src/test/res"
+    def testDir = "${buildDir}/intermediates/classes/test"
+
+    // Copy for debug
+    copy {
+        from resDir
+        into "$testDir/debug"
+    }
+
+    // Copy for release
+    copy {
+        from resDir
+        into "$testDir/release"
+    }
 }
 
-assembleDebug.dependsOn(copyResDirectoryToClasses)
+project(':app').check.dependsOn copyResDirectoryToClasses
