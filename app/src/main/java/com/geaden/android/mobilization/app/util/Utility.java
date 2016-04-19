@@ -100,6 +100,6 @@ public final class Utility {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
         SharedPreferences.Editor ed = sp.edit();
         ed.putInt(ctx.getString(R.string.pref_key_load_state), loadStatus);
-        ed.commit();
+        ed.apply();
     }
 }

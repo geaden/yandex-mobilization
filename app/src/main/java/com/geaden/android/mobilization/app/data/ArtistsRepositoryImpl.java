@@ -1,6 +1,8 @@
 package com.geaden.android.mobilization.app.data;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.geaden.android.mobilization.app.R;
@@ -159,15 +161,36 @@ public class ArtistsRepositoryImpl implements ArtistsRepository {
      * @param models   retrieved models.
      * @param callback loading callback.
      */
-    private void processArtistModels(List<ArtistModel> models, LoadArtistsCallback callback) {
-        List<Artist> artists = Lists.newArrayList();
-        for (ArtistModel model : models) {
-            artists.add(model.toArtist());
+    private void processArtistModels(final List<ArtistModel> models, final LoadArtistsCallback callback) {
+        new Handler(Looper.getMainLooper()).post(new ProcessModelsRunnable(models, callback));
+    }
+
+    class ProcessModelsRunnable implements Runnable {
+        private List<ArtistModel> mModels;
+        private LoadArtistsCallback mCallback;
+
+        public ProcessModelsRunnable(List<ArtistModel> models, LoadArtistsCallback callback) {
+            mModels = models;
+            mCallback = callback;
         }
-        if (artists.size() == 0) {
-            Utility.setLoadingStatus(mContext, LoadingStatus.NOT_FOUND);
+
+        @Override
+        public void run() {
+            // Moves the current Thread into the background
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+            List<Artist> artists = Lists.newArrayList();
+            if (mModels.size() == 0) {
+                Utility.setLoadingStatus(mContext, LoadingStatus.NOT_FOUND);
+                mCallback.onArtistsLoaded(artists);
+                return;
+            }
+
+            for (ArtistModel model : mModels) {
+                artists.add(model.toArtist());
+            }
+
+            mCallback.onArtistsLoaded(artists);
         }
-        callback.onArtistsLoaded(artists);
     }
 
     @Override

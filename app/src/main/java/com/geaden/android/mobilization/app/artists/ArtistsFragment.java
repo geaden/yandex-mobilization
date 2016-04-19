@@ -348,13 +348,12 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
         View root = inflater.inflate(R.layout.fragment_artists, container, false);
         ButterKnife.bind(this, root);
 
-        mRecyclerView.setAdapter(mArtistsAdapter);
-
         int numColumns = getContext().getResources().getInteger(R.integer.num_artists_columns);
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
         mRecyclerView.addItemDecoration(new MarginDecoration(getActivity()));
+        mRecyclerView.setAdapter(mArtistsAdapter);
 
         mArtistsAdapter.setEmptyView(mEmptyView);
         mArtistsAdapter.setContext(getActivity());
@@ -376,6 +375,11 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
         super.onResume();
         // Reset adapter's context.
         mArtistsAdapter.setContext(getActivity());
+        // Get filter genres
+        String[] filterGenres = Utility.getFilterGenres(getActivity());
+        if (filterGenres.length > 0) {
+            showFilteredIcon();
+        }
         mActionsListener.loadArtists(false);
     }
 

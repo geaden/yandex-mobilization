@@ -12,6 +12,7 @@
     <dimen name="artist_list_card_margin">4dp</dimen>
     <dimen name="artist_list_card_size">180dp</dimen>
     <dimen name="artist_list_card_default_radius">2dp</dimen>
+    <dimen name="item_margin">2dp</dimen>
 
     <dimen name="app_bar_elevation">4dp</dimen>
 
@@ -28,6 +29,5 @@
     <dimen name="artist_detail_name_padding_bottom">16dp</dimen>
     <dimen name="artist_detail_name_padding_left">64dp</dimen>
     <dimen name="artist_detail_cover_height">320dp</dimen>
-    <dimen name="item_margin">4dp</dimen>
     <dimen name="filter_icon_margin">4dp</dimen>
 </resources>

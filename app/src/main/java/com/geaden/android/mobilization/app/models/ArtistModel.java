@@ -3,11 +3,11 @@ package com.geaden.android.mobilization.app.models;
 import com.geaden.android.mobilization.app.data.Artist;
 import com.geaden.android.mobilization.app.data.Cover;
 import com.geaden.android.mobilization.app.database.ArtistsDatabase;
+import com.geaden.android.mobilization.app.util.Constants;
 import com.google.common.collect.Lists;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.List;
  */
 @Table(database = ArtistsDatabase.class)
 public class ArtistModel extends BaseModel {
+    private static final String TAG = ArtistModel.class.getSimpleName();
     @PrimaryKey
     long id;
 
@@ -28,7 +29,13 @@ public class ArtistModel extends BaseModel {
     @Column
     String description;
 
-    String[] genres;
+    /**
+     * While it's possible to get genres from {@link GenreModel_ArtistModel} table
+     * by query, it turned out it wasn't good for performance.
+     * So this field is required to store genres as string.
+     */
+    @Column
+    String genres;
 
     @Column
     int albums;
@@ -57,7 +64,7 @@ public class ArtistModel extends BaseModel {
         this.description = description;
     }
 
-    public void setGenres(String[] genres) {
+    public void setGenres(String genres) {
         this.genres = genres;
     }
 
@@ -81,26 +88,7 @@ public class ArtistModel extends BaseModel {
         this.link = link;
     }
 
-    /**
-     * Gets genres by the artist.
-     *
-     * @return genres by the artists.
-     */
-    public String[] getGenres() {
-        if (genres == null) {
-            // Get genres belonging to the artist.
-            List<GenreModel_ArtistModel> genreArtistModels = SQLite.select()
-                    .from(GenreModel_ArtistModel.class)
-                    .where(GenreModel_ArtistModel_Table.artistModel_id
-                            .is(id))
-                    .queryList();
-            genres = new String[genreArtistModels.size()];
-            int i = 0;
-            for (GenreModel_ArtistModel genreArtistModel : genreArtistModels) {
-                // TODO: Fix crash here...
-                genres[i++] = genreArtistModel.genreModel.getName();
-            }
-        }
+    public String getGenres() {
         return genres;
     }
 
@@ -114,7 +102,7 @@ public class ArtistModel extends BaseModel {
         artist.setCover(new Cover(coverSmall, coverBig));
         artist.setTracks(tracks);
         artist.setAlbums(albums);
-        artist.setGenres(getGenres());
+        artist.setGenres(getGenres().split(Constants.GENRES_SEPARATOR));
         artist.setLink(link);
         return artist;
     }

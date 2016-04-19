@@ -32,13 +32,6 @@ public class ArtistsPresenter implements ArtistsContract.UserActionsListener {
             mArtistsRepository.refreshData();
         }
 
-        String[] filteredGenres = mArtistsView.getFilteredGenres();
-
-        if (filteredGenres.length > 0) {
-            loadArtistsByGenres(filteredGenres);
-            return;
-        }
-
         mArtistsRepository.getArtists(new ArtistsRepository.LoadArtistsCallback() {
             @Override
             public void onArtistsLoaded(List<Artist> artists) {

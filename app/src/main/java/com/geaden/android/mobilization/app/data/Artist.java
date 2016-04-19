@@ -1,6 +1,8 @@
 package com.geaden.android.mobilization.app.data;
 
 import com.geaden.android.mobilization.app.models.ArtistModel;
+import com.geaden.android.mobilization.app.util.Constants;
+import com.google.common.base.Joiner;
 
 /**
  * Immutable Artist model.
@@ -95,7 +97,7 @@ public final class Artist {
         artistModel.setDescription(mDescription);
         artistModel.setCoverBig(mCover.getBig());
         artistModel.setCoverSmall(mCover.getSmall());
-        artistModel.setGenres(mGenres);
+        artistModel.setGenres(Joiner.on(Constants.GENRES_SEPARATOR).join(mGenres));
         artistModel.setLink(mLink);
         artistModel.setAlbums(mAlbums);
         artistModel.setTracks(mTracks);
