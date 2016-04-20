@@ -166,6 +166,7 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
         mArtistName.setBackground(ContextCompat.getDrawable(getActivity(),
                 R.drawable.overlay_bg_bottom_up));
         mArtistName.setText(name);
+        mCoverImage.setContentDescription(name);
     }
 
     @Override
@@ -180,8 +181,9 @@ public class ArtistDetailFragment extends Fragment implements ArtistDetailContra
     public void showCover(String coverLink) {
         Glide.with(this)
                 .load(coverLink)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .asBitmap()
                 .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(mCoverImage);
     }
 

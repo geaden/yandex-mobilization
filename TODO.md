@@ -4,9 +4,9 @@
 - [x] Fix scroll when orientation changed in detail view.
 - [x] Fix collapsing toolbar with FAB.
 - [x] Enhance grid layout in recycler view.
-- [ ] Enhance transition from list to detail.
-- [ ] Custom view for top aligned cover.
+- [x] Enhance transition from list to detail.
 - [ ] Change title when drawer is toggled.
+- [ ] About activity
 - [x] Update loading state.
 - [x] Capitalize artist description.
 - [x] Search artist by name.
