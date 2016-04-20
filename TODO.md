@@ -5,8 +5,8 @@
 - [x] Fix collapsing toolbar with FAB.
 - [x] Enhance grid layout in recycler view.
 - [x] Enhance transition from list to detail.
-- [ ] Change title when drawer is toggled.
-- [ ] About activity
+- [x] Change title when drawer is toggled.
+- [x] About activity
 - [x] Update loading state.
 - [x] Capitalize artist description.
 - [x] Search artist by name.

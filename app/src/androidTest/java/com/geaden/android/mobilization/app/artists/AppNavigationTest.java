@@ -1,10 +1,12 @@
 package com.geaden.android.mobilization.app.artists;
 
 import android.app.Application;
+import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.idling.CountingIdlingResource;
+import android.support.test.espresso.matcher.PreferenceMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +14,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.view.Gravity;
 
 import com.geaden.android.mobilization.app.ArtistsApplication;
+import com.geaden.android.mobilization.app.BuildConfig;
 import com.geaden.android.mobilization.app.R;
 import com.geaden.android.mobilization.app.di.component.DaggerTestRepositoryComponent;
 import com.geaden.android.mobilization.app.di.component.TestRepositoryComponent;
@@ -19,20 +22,22 @@ import com.geaden.android.mobilization.app.di.modules.TestRepositoryModule;
 import com.geaden.android.mobilization.app.util.ArtistsViewInteractions;
 import com.geaden.android.mobilization.app.util.DaggerActivityTestRule;
 
+import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.open;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static android.support.test.espresso.contrib.NavigationViewActions.navigateTo;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.fail;
 
 /**
  * Tests for the {@link DrawerLayout} layout component in {@link ArtistsActivity} which manages
@@ -86,7 +91,7 @@ public class AppNavigationTest {
     }
 
     @Test
-    public void clickOnAboutNavigationItem_ShowsAboutScreen() {
+    public void clickOnAboutNavigationItem_ShowsAboutScreen() throws Exception {
         // Open Drawer to click on navigation.
         onView(withId(R.id.drawer_layout))
                 .check(matches(isClosed(Gravity.LEFT))) // Left Drawer should be closed.
@@ -97,10 +102,15 @@ public class AppNavigationTest {
                 .perform(navigateTo(R.id.about_menu_item));
 
         // Check that about Activity was opened.
-        fail("Finish this");
-//        String expectedNoStatisticsText = InstrumentationRegistry.getTargetContext()
-//                .getString(R.string.no_statistics_available);
-//        onView(withId(R.id.no_statistics)).check(matches(withText(expectedNoStatisticsText)));
+        String aboutTitle = InstrumentationRegistry.getTargetContext().getString(R.string.about_title);
+        ArtistsViewInteractions.matchToolbarTitle(aboutTitle);
+
+        onData(PreferenceMatchers.withSummaryText(BuildConfig.VERSION_NAME)).check(matches(isDisplayed()));
+
+        Matcher<Preference> mobilizationPref = PreferenceMatchers.withKey(
+                InstrumentationRegistry.getTargetContext().getString(R.string.pref_key_mobilization));
+
+        onData(mobilizationPref).check(matches(isDisplayed()));
     }
 
     @Test

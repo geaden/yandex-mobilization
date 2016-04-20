@@ -42,3 +42,7 @@ before_script:
 
 script:
   - ./gradlew clean build checkAll
+
+after_success:
+  - ./gradlew assembleRelease
+  - ./gradlew upload -PbuildType=release

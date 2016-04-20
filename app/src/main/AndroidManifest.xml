@@ -26,6 +26,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".artists.ArtistsActivity" />
         </activity>
+        <activity
+            android:name=".about.AboutActivity"
+            android:parentActivityName=".artists.ArtistsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".artists.ArtistsActivity" />
+        </activity>
     </application>
 
 </manifest>

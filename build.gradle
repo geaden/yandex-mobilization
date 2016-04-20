@@ -26,11 +26,18 @@ task clean(type: Delete) {
 
 // Define versions in a single place
 ext {
+    baseName = 'yandex-mobilization-app'
+
+    // App version
+    versionCode = 1
+    buildNumber = System.getenv("TRAVIS_BUILD_NUMBER") ?: "0";
+    versionName = "1.0.$buildNumber"
+
     // Sdk and tools
-    minSdkVersion = 21
+    minSdkVersion = 18
     targetSdkVersion = 23
     compileSdkVersion = 23
-    buildToolsVersion = '24.0.0-alpha5'
+    buildToolsVersion = '24.0.0-rc2'
 
     // App dependencies
     supportLibraryVersion = '23.3.0'
@@ -55,3 +62,39 @@ task checkAll {
 }
 
 checkAll.dependsOn ':app:check', ':app:connectedCheck'
+
+import groovy.json.JsonSlurper;
+
+task upload {
+    description = 'Uploads apk to Yandex Disk'
+    doLast {
+        def yaDiskHeader = "Authorization: OAuth ${System.getenv("YA_DISK_TOKEN")}"
+        def fileBaseName = "${baseName}-${project.hasProperty('buildType') ? buildType : 'debug'}-${versionName}.apk"
+        def filePath = file("./app/build/outputs/apk/${fileBaseName}")
+        def yaDiskRequestUrl = "https://cloud-api.yandex.net:443/v1/disk/resources/upload?path=app:/${fileBaseName}&overwrite=true"
+
+        exec {
+            commandLine 'curl', '-s', '-H', yaDiskHeader, yaDiskRequestUrl
+            standardOutput = new ByteArrayOutputStream()
+
+            ext.output = {
+                return standardOutput.toString()
+            }
+        }
+
+        def jsonSlurper = new JsonSlurper()
+        def response = jsonSlurper.parseText(output.call())
+        def uploadUrl = response.href
+
+        println "Uploading URL: ${uploadUrl}"
+
+        exec {
+            commandLine 'curl', '-s', '-T', filePath, uploadUrl
+            standardOutput = new ByteArrayOutputStream()
+
+            ext.output = {
+                return standardOutput.toString()
+            }
+        }
+    }
+}

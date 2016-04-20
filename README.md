@@ -34,5 +34,6 @@ sqlite> .schema
  - [Android TDD Playground](https://github.com/pestrada/android-tdd-playground)
  - [Fragment Navigation Drawer](https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer)
  - [Android Dev Summit Architecture Demo](https://github.com/yigit/dev-summit-architecture-demo)
+ - [Upload file to Yandex Disk](http://www.influunt.ru/backup2yandex-disk-with-rest-api)
 
 Gennady Denisov, 2016.

@@ -4,20 +4,25 @@
     <!-- Drawer related -->
     <string name="open_drawer">Open drawer</string>
     <string name="close_drawer">Close drawer</string>
-    <string name="navigation_view_header_title">@string/app_name</string>
+    <string name="navigation_view_header_title" translatable="false">@string/app_name</string>
     <string name="about_title">About</string>
 
     <!-- Artist -->
     <string name="albums_tracks"><xliff:g name="albums">%1$d</xliff:g> albums, <xliff:g name="tracks">%2$d</xliff:g> tracks</string>
-    <string name="empty">@string/loading</string>
+    <string name="empty" translatable="false">@string/loading</string>
     <string name="action_open_link">Open artist link</string>
 
     <!-- Possible artists list states -->
     <string name="loading">Loading…</string>
+    <string name="network_error">Connection not available.</string>
+    <string name="not_found">No artists found :(</string>
+    <string name="unknown_error">Unknown error</string>
+
+    <string name="artists_title">Artists</string>
 
     <!-- Artist details -->
     <string name="artist_details_albums_tracks"><xliff:g name="albums">%1$d</xliff:g> albums • <xliff:g name="tracks">%2$d</xliff:g> tracks</string>
-    <string name="transition_cover">transition_cover</string>
+    <string name="transition_cover" translatable="false">transition_cover</string>
     <string name="missing_artist">Artist not found :(</string>
 
     <!-- Search artists -->
@@ -35,17 +40,20 @@
     <string name="pref_order_by_albums_title">Albums</string>
 
     <!-- Other preferences key -->
-    <string name="pref_key_load_state">pref_load_state</string>
-    <string name="network_error">Connection not available.</string>
-    <string name="not_found">No artists found :(</string>
-    <string name="unknown_error">Unknown error</string>
+    <string name="pref_key_load_state" translatable="false">pref_load_state</string>
+    <string name="pref_key_version" translatable="false">version_key</string>
+    <string name="pref_key_mobilization" translatable="false">mobilization_key</string>
 
     <!-- Genres -->
     <string name="artists_menu_title_genres">Genres…</string>
     <string name="artists_genres_selection_title">Select genres</string>
-    <string name="pref_key_filter_genres">pref_filter_genres</string>
+    <string name="pref_key_filter_genres" translatable="false">pref_filter_genres</string>
     <string name="filter">Filter</string>
     <string name="filtered_by_genres">Filtered by <xliff:g name="genres">%1$s</xliff:g></string>
     <string name="reset">Reset</string>
-    <string name="artists_title">Artists</string>
+
+    <!-- About activity related -->
+    <string name="pref_version_title">Version</string>
+    <string name="pref_mobilization_title">Project &#171;Mobilization&#187;</string>
+    <string name="pref_mobilization_summary">About the Project &#171;Mobilization&#187; from Yandex</string>
 </resources>

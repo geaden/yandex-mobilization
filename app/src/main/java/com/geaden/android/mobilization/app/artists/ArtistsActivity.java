@@ -1,5 +1,6 @@
 package com.geaden.android.mobilization.app.artists;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.geaden.android.mobilization.app.R;
+import com.geaden.android.mobilization.app.about.AboutActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -111,6 +113,14 @@ public class ArtistsActivity extends AppCompatActivity {
      * @param menuItem selected menu item.
      */
     private void selectDrawerItem(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.about_menu_item:
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
 
     }
 

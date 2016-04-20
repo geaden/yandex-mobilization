@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 
 /**
  * A simple scale transition class to allow an element to scale in or out.
- * This is used by the floating action button on the attraction detail screen
+ * This is used by the floating action button on the artist detail screen
  * when it appears and disappears during the Activity transitions.
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
