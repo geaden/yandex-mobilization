@@ -32,6 +32,7 @@ sqlite> .schema
  - [Building and Android Project in Travis](https://docs.travis-ci.com/user/languages/android)
  - [Retrofit 2 - Mocking HTTP Responses](http://riggaroo.co.za/retrofit-2-mocking-http-responses/)
  - [Android TDD Playground](https://github.com/pestrada/android-tdd-playground)
+ - [Square Island about Android Development](http://blog.sqisland.com/)
  - [Fragment Navigation Drawer](https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer)
  - [Android Dev Summit Architecture Demo](https://github.com/yigit/dev-summit-architecture-demo)
  - [Upload file to Yandex Disk](http://www.influunt.ru/backup2yandex-disk-with-rest-api)

@@ -35,6 +35,7 @@ android {
         }
     }
 
+    // Modify output file name according to baseName
     applicationVariants.all { variant ->
         def apkName = "${rootProject.ext.baseName}-${variant.buildType.name}-${defaultConfig.versionName}.apk"
         variant.outputs.each { output ->
