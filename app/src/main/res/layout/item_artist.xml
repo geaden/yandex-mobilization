@@ -6,6 +6,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
+    android:layout_margin="@dimen/item_margin"
     app:cardCornerRadius="@dimen/artist_list_card_default_radius"
     app:cardUseCompatPadding="true">
 
@@ -16,7 +17,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/artist_list_card_size">
+            android:layout_height="wrap_content">
 
             <!--suppress AndroidLintContentDescription -->
             <ImageView

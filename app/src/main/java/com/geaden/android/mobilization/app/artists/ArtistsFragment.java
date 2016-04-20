@@ -4,7 +4,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -352,7 +351,6 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
-        mRecyclerView.addItemDecoration(new MarginDecoration(getActivity()));
         mRecyclerView.setAdapter(mArtistsAdapter);
 
         mArtistsAdapter.setEmptyView(mEmptyView);
@@ -534,23 +532,6 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
                 Artist artist = getItem(position);
                 mItemListener.onArtistClick(artist, coverSmall);
             }
-        }
-    }
-
-    /**
-     * Artists grid decoration.
-     */
-    public static class MarginDecoration extends RecyclerView.ItemDecoration {
-        private int margin;
-
-        public MarginDecoration(Context context) {
-            margin = context.getResources().getDimensionPixelSize(R.dimen.item_margin);
-        }
-
-        @Override
-        public void getItemOffsets(
-                Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            outRect.set(margin, margin, margin, margin);
         }
     }
 
