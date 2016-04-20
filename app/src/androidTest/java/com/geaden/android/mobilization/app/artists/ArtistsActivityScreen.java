@@ -16,6 +16,7 @@ import com.geaden.android.mobilization.app.di.component.DaggerTestRepositoryComp
 import com.geaden.android.mobilization.app.di.component.RepositoryComponent;
 import com.geaden.android.mobilization.app.di.modules.TestRepositoryModule;
 import com.geaden.android.mobilization.app.matchers.ArtistsMatchers;
+import com.geaden.android.mobilization.app.util.ArtistsViewInteractions;
 import com.geaden.android.mobilization.app.util.DaggerActivityTestRule;
 import com.geaden.android.mobilization.app.util.Utility;
 
@@ -90,6 +91,11 @@ public class ArtistsActivityScreen {
 
     @Test
     public void showArtistsList() {
+        // Check title
+        CharSequence title = InstrumentationRegistry.getTargetContext()
+                .getString(R.string.artists_title);
+        ArtistsViewInteractions.matchToolbarTitle(title);
+
         // Check proper number of items loaded from repository.
         onView(withId(R.id.artists_list)).check(ArtistsViewAssertions.hasItemsCount(3));
 

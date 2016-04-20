@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 
 import com.geaden.android.mobilization.app.R;
@@ -48,6 +49,7 @@ public class ArtistsActivity extends AppCompatActivity {
         // Set up the toolbar.
         setSupportActionBar(mToolbar);
         ActionBar ab = getSupportActionBar();
+        ab.setTitle(getString(R.string.artists_title));
         ab.setDisplayHomeAsUpEnabled(true);
 
         // Set up drawer toggle
@@ -66,7 +68,19 @@ public class ArtistsActivity extends AppCompatActivity {
     // Sets up drawer toggle.
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer,
-                R.string.close_drawer);
+                R.string.close_drawer) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setTitle(R.string.app_name);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                getSupportActionBar().setTitle(R.string.artists_title);
+            }
+        };
 
     }
 
@@ -133,6 +147,4 @@ public class ArtistsActivity extends AppCompatActivity {
         // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
-
-
 }
