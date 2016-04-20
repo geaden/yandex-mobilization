@@ -14,11 +14,17 @@ cache:
 
 env:
   global:
+    - ARTIFACTS_BUCKET=mobilization-artifacts
     - ANDROID_API_LEVEL=23
     - ANDROID_TARGET=android-23
     - ANDROID_ABI=armeabi-v7a
     - ANDROID_BUILD_TOOLS_VERSION=23.0.2
     - ADB_INSTALL_TIMEOUT=20 # minutes (2 minutes by default)
+
+addons:
+  artifacts:
+    paths:
+      - $HOME/build/geaden/yandex-mobilization/app/build/reports
 
 android:
   components:
@@ -35,17 +41,17 @@ android:
 
 # Emulator Management: Create, Start and Wait
 before_script:
-  - service postgresql stop || true
-  - service mysql stop || true
-  - service memcached stop || true
-  - service bootlogd stop || true
-  - service elasticsearch stop || true
-  - service mongodb stop || true
-  - service neo4j stop || true
-  - service cassandra stop || true
-  - service riak stop || true
-  - service rsync stop || true
-  - service x11-common stop || true
+  - sudo service postgresql stop || true
+  - sudo service mysql stop || true
+  - sudo service memcached stop || true
+  - sudo service bootlogd stop || true
+  - sudo service elasticsearch stop || true
+  - sudo service mongodb stop || true
+  - sudo service neo4j stop || true
+  - sudo service cassandra stop || true
+  - sudo service riak stop || true
+  - sudo service rsync stop || true
+  - sudo service x11-common stop || true
   - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator

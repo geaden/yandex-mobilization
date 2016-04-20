@@ -125,6 +125,9 @@ public class ArtistsFragment extends Fragment implements ArtistsContract.View,
             public boolean onQueryTextChange(String query) {
                 if (!TextUtils.isEmpty(query)) {
                     mActionsListener.loadArtistsByName(query);
+                } else {
+                    // Just load all artists.
+                    mActionsListener.loadArtists(false);
                 }
                 return true;
             }

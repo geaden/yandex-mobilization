@@ -13,3 +13,4 @@
 - [x] Filter by genre
 - [x] Order by tracks or albums.
 - [ ] Tablet layout
+- [ ] Shrink release package
