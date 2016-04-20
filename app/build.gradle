@@ -132,7 +132,6 @@ at runtime. More info in this tools bug: (https://code.google.com/p/android/issu
 
 // Copy res directory from unit-tests
 task copyResDirectoryToClasses << {
-    // Copy for debug
     def resDir = "${projectDir}/src/test/res"
     def testDir = "${buildDir}/intermediates/classes/test"
 

@@ -52,7 +52,7 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-  - ./gradlew clean build checkAll
+  - ./gradlew clean checkAll
 
 after_success:
   - ./gradlew assembleRelease
