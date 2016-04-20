@@ -29,7 +29,7 @@ sqlite> .schema
  - [Material Design Icons](https://design.google.com/icons/)
  - [Dependency Injection with Dagger 2](https://github.com/codepath/android_guides/wiki/Dependency-Injection-with-Dagger-2)
  - [DBFlow Guide](https://guides.codepath.com/android/DBFlow-Guide)
- - [Building and Android Project in Travis](https://docs.travis-ci.com/user/languages/android)
+ - [Building an Android Project in Travis](https://docs.travis-ci.com/user/languages/android)
  - [Retrofit 2 - Mocking HTTP Responses](http://riggaroo.co.za/retrofit-2-mocking-http-responses/)
  - [Android TDD Playground](https://github.com/pestrada/android-tdd-playground)
  - [Square Island about Android Development](http://blog.sqisland.com/)

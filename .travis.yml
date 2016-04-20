@@ -1,7 +1,7 @@
 language: android
 jdk: oraclejdk7
 # Use the Travis Container-Based Infrastructure
-sudo: false
+sudo: required
 
 branches:
   only:
