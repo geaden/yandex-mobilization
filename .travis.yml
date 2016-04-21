@@ -68,8 +68,7 @@ after_failure:
 
 after_success:
   # Upload results to coveralls
-  - pip install --user coveralls
-  - coveralls
+  - ./gradlew coveralls
   # Assemble release and upload current version
   - ./gradlew assembleRelease
   - ./gradlew upload -PbuildType=release

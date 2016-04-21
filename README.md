@@ -12,6 +12,14 @@ Inspired by:
  - Dagger 2 
  - Test-driven development.
  
+## Screenshots
+
+![Artists Grid](https://raw.githubusercontent.com/geaden/yandex-mobilization/master/screenshots/artists-grid.png) ![Artists Grid](https://raw.githubusercontent.com/geaden/yandex-mobilization/master/screenshots/artists-detail.png)
+
+## Download
+
+![Download](https://disk.yandex.net/qr/?text=https%3A%2F%2Fyadi.sk%2Fd%2FVrwklSbRrAhpo)
+ 
 ## Lessons learned
  
 1. Manually query database
