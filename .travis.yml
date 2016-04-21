@@ -26,6 +26,7 @@ addons:
     s3_region: "us-west-1"
     paths:
       - $HOME/build/geaden/yandex-mobilization/app/build/reports
+      - $HOME/build/geaden/yandex-mobilization/app/build/outputs/*.html
 
 android:
   components:
@@ -56,11 +57,17 @@ before_script:
   - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
+  - adb devices
   - adb shell input keyevent 82 &
 
 script:
-  - ./gradlew clean checkAll
+  - ./gradlew clean checkAll -PdisablePreDex
+
+after_failure:
+  # Make screenshot
+  - adb shell screencap -p | sed 's/\r$//' > $HOME/build/geaden/yandex-mobilization/app/build/reports/screen.png
 
 after_success:
+  # Assemble release and upload current version
   - ./gradlew assembleRelease
   - ./gradlew upload -PbuildType=release
