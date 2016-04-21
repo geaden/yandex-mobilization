@@ -14,7 +14,7 @@ Inspired by:
  
 ## Screenshots
 
-![Artists Grid](https://raw.githubusercontent.com/geaden/yandex-mobilization/master/screenshots/artists-grid.png) ![Artists Grid](https://raw.githubusercontent.com/geaden/yandex-mobilization/master/screenshots/artists-detail.png)
+<img src="https://raw.githubusercontent.com/geaden/yandex-mobilization/master/screenshots/artists-grid.png" width="400" alt="Artists Grid" /> <img src="https://raw.githubusercontent.com/geaden/yandex-mobilization/master/screenshots/artists-detail.png" width="400" alt="Artists Detail" />
 
 ## Download
 
