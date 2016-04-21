@@ -18,7 +18,7 @@ Inspired by:
 
 ## Download
 
-![Download](https://disk.yandex.net/qr/?text=https%3A%2F%2Fyadi.sk%2Fd%2FVrwklSbRrAhpo)
+[![Download](https://disk.yandex.net/qr/?text=https%3A%2F%2Fyadi.sk%2Fd%2FVrwklSbRrAhpo)](https://yadi.sk/d/VrwklSbRrAhpo)
  
 ## Lessons learned
  
