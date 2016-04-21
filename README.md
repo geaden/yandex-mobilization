@@ -9,7 +9,7 @@ Inspired by:
  - [Android Testing Code Labs](https://codelabs.developers.google.com/codelabs/android-testing/)
  - [Model-View-Presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) pattern in Android
  - Clean Architecture
- - Dagger 2 
+ - Dependency Injection
  - Test-driven development.
  
 ## Screenshots
