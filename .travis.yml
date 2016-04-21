@@ -23,6 +23,7 @@ env:
 
 addons:
   artifacts:
+    s3_region: "us-west-1"
     paths:
       - $HOME/build/geaden/yandex-mobilization/app/build/reports
 
