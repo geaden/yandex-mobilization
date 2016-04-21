@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -35,6 +34,7 @@ import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -118,8 +118,8 @@ public class ArtistsActivityScreen {
     }
 
     @Test
-    public void setOrderBy() {
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+    public void shouldSetOrderBy() {
+        onView(withContentDescription("More options")).perform(click());
         onView(withText(R.string.artists_menu_title_order)).perform(click());
         onView(withText(R.string.artists_order_selection_title)).check(matches(isDisplayed()));
         // Check that tracks is selected.
@@ -140,7 +140,7 @@ public class ArtistsActivityScreen {
 
     @Test
     public void shouldSelectGenres() {
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+        onView(withContentDescription("More options")).perform(click());
         onView(withText(R.string.artists_menu_title_genres)).perform(click());
         onView(withText(R.string.artists_genres_selection_title)).check(matches(isDisplayed()));
         onView(withText("foo")).perform(click());

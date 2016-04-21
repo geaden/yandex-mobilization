@@ -26,7 +26,6 @@ addons:
     s3_region: "us-west-1"
     paths:
       - $HOME/build/geaden/yandex-mobilization/app/build/reports
-      - $HOME/build/geaden/yandex-mobilization/app/build/outputs/*.html
 
 android:
   components:
@@ -64,10 +63,13 @@ script:
   - ./gradlew clean checkAll -PdisablePreDex
 
 after_failure:
-  # Make screenshot
+  # Make a screenshot
   - adb shell screencap -p | sed 's/\r$//' > $HOME/build/geaden/yandex-mobilization/app/build/reports/screen.png
 
 after_success:
+  # Upload results to coveralls
+  - pip install --user coveralls
+  - coveralls
   # Assemble release and upload current version
   - ./gradlew assembleRelease
   - ./gradlew upload -PbuildType=release
